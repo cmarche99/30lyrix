@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@firebase/database": "^0.6.6",
+    "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "firebase": "^7.15.5",
     "vue": "^2.6.11",
