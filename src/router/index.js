@@ -2,7 +2,12 @@
 // import VueRouter from 'vue-router'
 // import Home from '../views/Home.vue'
 
+<<<<<<< Updated upstream
 // Vue.use(VueRouter)
+=======
+
+Vue.use(VueRouter)
+>>>>>>> Stashed changes
 
 //   const routes = [
 //   {
