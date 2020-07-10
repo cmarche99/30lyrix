@@ -1,3 +1,4 @@
+
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
@@ -24,6 +25,7 @@ const router = new VueRouter({
       { path: '/artista/:id_artist', component: Artista}
   ]
 });
+
 
 new Vue({
   router,
