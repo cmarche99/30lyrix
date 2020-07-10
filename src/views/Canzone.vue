@@ -101,6 +101,6 @@ export default{
 <style scoped>
     pre {
         font-family: "Roboto";
-font-weight: 400;
+        font-weight: 400;
     }
 </style>
