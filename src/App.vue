@@ -2,7 +2,7 @@
    <md-app  id="App" md-mode="fixed-last">
       <md-app-toolbar class="md-primary">
         <div class="md-toolbar-section start">
-         <md-button>
+         <md-button :to= " '/home/' ">
          <span class="md-title">30lyrix</span>
          </md-button>
         </div> 

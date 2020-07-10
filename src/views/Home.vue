@@ -33,11 +33,11 @@ export default {
         cercaCanzone(){
       axios.get('https://api.happi.dev/v1/music?q=' + this.ricerca +'&limit=30&apikey=945335Zmq8pmd4LEAhl2oM3HYyGxq5cWA0rYkQPdkYe7qo38CukWVmcH&type=')
       .then((data) => {
-        console.log ('successo');
-        console.log(data);
+        // console.log ('successo');
+        // console.log(data);
         this.risultati = data.data.result;
       }).catch((e) =>{
-        console.error('schifo');
+        console.error('Qualcosa è andato storto! ');
         console.log(e);
       });
     }
