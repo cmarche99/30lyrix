@@ -4,7 +4,9 @@
             <md-card-header>
             <md-card-header-text>
             <div class="md-title">{{canzone.track | truncate(20)}}</div>
-            <div class="md-subhead">{{canzone.artist}}</div>
+            <div class="md-subhead">
+                <router-link :to=" '/artista/' + canzone.id-artist">{{canzone.artist}}</router-link>
+            </div>
             </md-card-header-text>
 
             <md-card-media>
@@ -13,7 +15,8 @@
         </md-card-header>
 
         <md-card-actions>
-            <md-button>Dettagli canzone</md-button>
+            <md-button :to=" '/canzone/' + canzone.id_artist + '/' + canzone.id_album + '/' + canzone.id_track "
+            class= "md-raised md-primary">Dettagli canzone</md-button>
         </md-card-actions>
         </md-card>
     </div>
