@@ -10,9 +10,28 @@
         <md-button class="md-icon-button">
           <md-icon>favorite</md-icon>
         </md-button>
+      <!-- </div>
+      <div> -->
+        <span v-if="login">Login: {{login}}</span>
+        <md-dialog-prompt
+          :md-active.sync="dialogo"
+          v-model="login"
+          md-title="What's your name?"
+          md-input-maxlength="30"
+          md-input-placeholder="Type your name..."
+          md-confirm-text="Done"
+          @md-confirm="setLogin()"
+        />
+
+        <md-button @click="dialogo=true" v-if="islog == false">login</md-button>
+        <!-- <p>{{islog}}</p> -->
+        <md-button @click="logout()" v-if="islog == true">logout</md-button>
+        <!-- <div>
+        <p v-if="islog">Benvenuto {{username}}</p>
+        <p>{{islog}}</p>
+        </div>-->
       </div>
     </md-app-toolbar>
-
     <md-app-content>
       <router-view></router-view>
     </md-app-content>
@@ -25,23 +44,39 @@ import axios from "axios";
 export default {
   data: function() {
     return {
-      prova: "ciao"
+      prova: "ciao",
+      dialogo: false,
+      login: undefined,
+      // username: this.getLogin(),
+      islog: this.isLogin()
     };
+  },
+  watch: {
+    login: function(value) {
+      this.islog == true;
+    }
+  },
+  created() {
+    getLogin(), isLogin();
+  },
+  methods: {
+    setLogin() {
+      console.log(this.login);
+      localStorage.setItem("username", this.login);
+      this.islog = true;
+      console.log(this.islog);
+    },
+    // getLogin (){
+    //   return localStorage.getItem("username");
+    // },
+    isLogin() {
+      return !!localStorage.getItem("username");
+    },
+    logout() {
+    localStorage.removeItem("username");
+    this.islog = false;
+    this.login = undefined;
+    },
   }
-  // created(){
-  //   this.fetch();
-  // },
-  // methods: {
-  //   fetch(){
-  //     axios.get('https://api.happi.dev/v1/music?q=umbrella%20rihanna&limit=&apikey=945335Zmq8pmd4LEAhl2oM3HYyGxq5cWA0rYkQPdkYe7qo38CukWVmcH&type=')
-  //     .then((data) => {
-  //       console.log ('successo');
-  //       console.log(data);
-  //       this.prova = data.data.result[0].album;
-  //     }).catch(() =>{
-  //       console.error('schifo');
-  //     });
-  //   }
-  // }
 };
 </script>

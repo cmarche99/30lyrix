@@ -1,15 +1,28 @@
 <template>
 <div>
-  <dialogoLogin :dialogo="dialogo" :login="login"></dialogoLogin>
+  <!-- <dialogoLogin :dialogo="dialogo"
+  v-on:childToParent="onChildClick"
+  v-on:alpadre="onschiaccio">
+  </dialogoLogin> -->
   <md-card class="md-layout-item">
     <md-card-header>
       <md-card-header-text>
         <span class="md-title">{{dettagli.track}}</span>
       </md-card-header-text>
-      <md-card-actions>
-        <md-button class="md-icon-button" @click="dialogo=true">
+      <md-card-actions v-if="islog == true">
+        <md-button class="md-icon-button">
           <md-icon>favorite_border</md-icon>
         </md-button>
+        <!-- <span v-if="login">Login: {{login}}</span>
+          <md-dialog-prompt 
+            v-if="login != ''"
+            :md-active.sync="dialogo"
+            v-model="login"
+            md-title="What's your name?"
+            md-input-maxlength="30"
+            md-input-placeholder="Type your name..."
+            md-confirm-text="Done" 
+            @md-confirm="setLogin()"/> -->
         <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
       </md-card-actions>
     </md-card-header>
@@ -30,7 +43,7 @@
           <md-table-cell>{{dettagli.album}}</md-table-cell>
         </md-table-row>
         <md-table-row v-if="dettagli.haslyrics">
-          <md-table-cell class="md-alignment-top-center">
+          <md-table-cell>
             <b>Testo</b>
           </md-table-cell>
           <md-table-cell>
@@ -48,15 +61,14 @@ import axios from "axios";
 import dialogoLogin from "../components/dialogoLogin";
 
 export default {
-  components: {
-    dialogoLogin
-  },
   data: function() {
     return {
       dettagli: null,
       testo: null,
-      dialogo: false,
-      login: null,
+      // dialogo: false,
+      // login: undefined,
+      // fromChild: '',
+      islog: this.isLogin()
     };
   },
   created() {
@@ -109,7 +121,23 @@ export default {
           console.error("qualcosa è andato storto canzone");
           console.log(e);
         });
-    }
+    },
+    isLogin() {
+      return !!localStorage.getItem("username");
+    },
+    // setLogin(){
+    //   console.log(this.login);
+    //   localStorage.setItem("username", this.login)
+    // }
+
+    // onChildClick(value){
+    //   this.fromChild = value;
+    //   console.log(this.fromChild);
+    // },
+    // onschiaccio(value){
+    //   this.dialogo = value;
+    //   console.lof(this.dialogo);
+    // }
   }
 };
 </script>
