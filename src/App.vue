@@ -57,7 +57,7 @@ export default {
     }
   },
   created() {
-    getLogin(), isLogin();
+    this.isLogin();
   },
   methods: {
     setLogin() {
@@ -65,6 +65,7 @@ export default {
       localStorage.setItem("username", this.login);
       this.islog = true;
       console.log(this.islog);
+      // this.$forceUpdate();
     },
     // getLogin (){
     //   return localStorage.getItem("username");

@@ -11,6 +11,7 @@ import Home from "./views/Home";
 import Canzone from "./views/Canzone";
 import Artista from "./views/Artista";
 import Playlist from "./views/Playlist";
+import Preferiti from "./views/Preferiti";
 
 Vue.use(VueMaterial);
 Vue.use(VueRouter);
@@ -25,7 +26,8 @@ const router = new VueRouter({
       { path: '/canzone/:id_artist/:id_album/:id_track', component: Canzone },
       { path: '/', redirect: '/home' },
       { path: '/artista/:id_artist', component: Artista},
-      { path: '/playlist/:artist/:id_artist', component: Playlist}
+      { path: '/playlist/:artist/:id_artist', component: Playlist},
+      { path: '/preferiti', component: Preferiti}
   ]
 });
 

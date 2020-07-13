@@ -1,7 +1,11 @@
 <template>
   <div>
+    <md-card>
+      <md-card-header>
       <h2>Qui puoi trovare tante cose belle sulle canzoni e i loro autori...</h2>
-    <h3>Cerca la canzone che ti interessa!</h3>
+    <p>Cerca la canzone che ti interessa!</p>
+    </md-card-header>
+    <md-card-content>
     <div class="md-layout md-gutter">
       <div class="md-layout-item md-size-90 md-xsmall-size-100">
         <md-field md-layout="box" md-dense :md-counter="false">
@@ -26,6 +30,8 @@
     <div class="md-layout md-gutter md-alignment-center">
       <cardCanzone v-for="traccia in risultati" :key="traccia.id_track" :canzone="traccia"></cardCanzone>
     </div>
+    </md-card-content>
+    </md-card>
   </div>
 </template>
 
@@ -68,5 +74,8 @@ export default {
 <style>
 .md-layout {
   width: 100%;
+}
+md-card-content {
+  padding: 5%;
 }
 </style>

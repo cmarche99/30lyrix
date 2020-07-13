@@ -1,64 +1,84 @@
 <template>
-<div>
-  <!-- <dialogoLogin :dialogo="dialogo"
+  <div>
+    <!-- <dialogoLogin :dialogo="dialogo"
   v-on:childToParent="onChildClick"
   v-on:alpadre="onschiaccio">
-  </dialogoLogin> -->
-  <md-card class="md-layout-item">
-    <md-card-header>
-      <md-card-header-text>
-        <span class="md-title">{{dettagli.track}}</span>
-      </md-card-header-text>
-      <md-card-actions v-if="islog == true">
-        <md-button class="md-icon-button">
-          <md-icon>favorite_border</md-icon>
-        </md-button>
-        <!-- <span v-if="login">Login: {{login}}</span>
-          <md-dialog-prompt 
+    </dialogoLogin>-->
+    <md-card class="md-layout-item">
+      <md-card-header>
+        <md-card-header-text>
+          <span class="md-title">{{dettagli.track}}</span>
+        </md-card-header-text>
+        <md-card-actions>
+          <md-button class="md-icon-button" @click="isLogin(); aprireDialogo();">
+            <md-icon>favorite_border</md-icon>
+          </md-button>
+          <!-- <span v-if="login">Login: {{login}}</span>
+          <md-dialog-prompt
             v-if="login != ''"
             :md-active.sync="dialogo"
             v-model="login"
             md-title="What's your name?"
             md-input-maxlength="30"
             md-input-placeholder="Type your name..."
-            md-confirm-text="Done" 
-            @md-confirm="setLogin()"/> -->
-        <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
-      </md-card-actions>
-    </md-card-header>
-    <md-card-content>
-      <md-table>
-        <md-table-row>
-          <md-table-cell>
-            <b>Artista</b>
-          </md-table-cell>
-          <md-table-cell>
-            <router-link :to="'/artista/' + this.$route.params.id_artist">{{dettagli.artist}}</router-link>
-          </md-table-cell>
-        </md-table-row>
-        <md-table-row>
-          <md-table-cell>
-            <b>Album</b>
-          </md-table-cell>
-          <md-table-cell>{{dettagli.album}}</md-table-cell>
-        </md-table-row>
-        <md-table-row v-if="dettagli.haslyrics">
-          <md-table-cell>
-            <b>Testo</b>
-          </md-table-cell>
-          <md-table-cell>
-            <pre>{{testo}}</pre>
-          </md-table-cell>
-        </md-table-row>
-      </md-table>
-    </md-card-content>
-  </md-card>
-</div>
+            md-confirm-text="Done"
+          @md-confirm="setLogin()"/>-->
+
+          <!-- <md-dialog-alert
+            :md-active.sync="preferiti"
+            md-content="La canzone è stata aggiunta ai preferiti!"
+            md-confirm-text="ok"
+          />-->
+          <md-snackbar :md-duration="4000" :md-active.sync="preferiti" md-persistent>
+            <span>Aggiunto ai preferiti!</span>
+            <md-button class="md-primary" :to=" '/preferiti/' ">Vedi i preferiti</md-button>
+          </md-snackbar>
+
+          <md-dialog-alert
+            :md-active.sync="loggati"
+            md-title="Azione non permessa"
+            md-content="Per aggiungere una canzone ai preferiti devi prima essere loggato"
+            md-confirm-text="ok"
+          />
+
+          <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
+        </md-card-actions>
+      </md-card-header>
+
+      <md-card-content>
+        <md-table>
+          <md-table-row>
+            <md-table-cell>
+              <b>Artista</b>
+            </md-table-cell>
+            <md-table-cell>
+              <router-link :to="'/artista/' + this.$route.params.id_artist">{{dettagli.artist}}</router-link>
+            </md-table-cell>
+          </md-table-row>
+          <md-table-row>
+            <md-table-cell>
+              <b>Album</b>
+            </md-table-cell>
+            <md-table-cell>{{dettagli.album}}</md-table-cell>
+          </md-table-row>
+          <md-table-row v-if="dettagli.haslyrics">
+            <md-table-cell>
+              <b>Testo</b>
+            </md-table-cell>
+            <md-table-cell>
+              <pre>{{testo}}</pre>
+            </md-table-cell>
+          </md-table-row>
+        </md-table>
+      </md-card-content>
+    </md-card>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import dialogoLogin from "../components/dialogoLogin";
+import dataService from "../dataService";
 
 export default {
   data: function() {
@@ -68,11 +88,15 @@ export default {
       // dialogo: false,
       // login: undefined,
       // fromChild: '',
-      islog: this.isLogin()
+      // islog: this.isLogin(),
+      islog: undefined,
+      preferiti: undefined,
+      loggati: undefined
     };
   },
   created() {
     this.dettagliCanzone();
+    // this.isLogin();
   },
   methods: {
     dettagliCanzone() {
@@ -122,9 +146,13 @@ export default {
           console.log(e);
         });
     },
+    // isLogin() {
+    //   return !!localStorage.getItem("username");
+    // },
     isLogin() {
-      return !!localStorage.getItem("username");
+      this.islog = !!localStorage.getItem("username");
     },
+
     // setLogin(){
     //   console.log(this.login);
     //   localStorage.setItem("username", this.login)
@@ -138,6 +166,28 @@ export default {
     //   this.dialogo = value;
     //   console.lof(this.dialogo);
     // }
+    aprireDialogo() {
+      // return islog= !!localStorage.getItem("username");
+      if (this.islog == true) {
+        this.preferiti = true;
+        this.loggati = false;
+        preferiti();
+      } else {
+        this.loggati = true;
+        this.preferiti = false;
+      }
+    },
+    preferiti (){
+      dataService.setPreferiti(this.dettagli.id_track,
+      this.dettagli.id_artist,
+      this.dettagli.id_album)
+      .then(() => {
+        console.log("hai aggiunto ai prefe");
+      })
+      .catch(() =>{
+        console.log("c'è qualcosa che non va");
+      })
+    }
   }
 };
 </script>
