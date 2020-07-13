@@ -1,9 +1,5 @@
 <template>
   <div>
-    <!-- <dialogoLogin :dialogo="dialogo"
-  v-on:childToParent="onChildClick"
-  v-on:alpadre="onschiaccio">
-    </dialogoLogin>-->
     <md-card class="md-layout-item">
       <md-card-header>
         <md-card-header-text>
@@ -13,22 +9,6 @@
           <md-button class="md-icon-button" @click="isLogin(); aprireDialogo();">
             <md-icon>favorite_border</md-icon>
           </md-button>
-          <!-- <span v-if="login">Login: {{login}}</span>
-          <md-dialog-prompt
-            v-if="login != ''"
-            :md-active.sync="dialogo"
-            v-model="login"
-            md-title="What's your name?"
-            md-input-maxlength="30"
-            md-input-placeholder="Type your name..."
-            md-confirm-text="Done"
-          @md-confirm="setLogin()"/>-->
-
-          <!-- <md-dialog-alert
-            :md-active.sync="preferiti"
-            md-content="La canzone è stata aggiunta ai preferiti!"
-            md-confirm-text="ok"
-          />-->
           <md-snackbar :md-duration="4000" :md-active.sync="preferiti" md-persistent>
             <span>Aggiunto ai preferiti!</span>
             <md-button class="md-primary" :to=" '/preferiti/' ">Vedi i preferiti</md-button>
@@ -83,12 +63,8 @@ import dataService from "../dataService";
 export default {
   data: function() {
     return {
-      dettagli: null,
+      dettagli: '',
       testo: null,
-      // dialogo: false,
-      // login: undefined,
-      // fromChild: '',
-      // islog: this.isLogin(),
       islog: undefined,
       preferiti: undefined,
       loggati: undefined
@@ -96,7 +72,6 @@ export default {
   },
   created() {
     this.dettagliCanzone();
-    // this.isLogin();
   },
   methods: {
     dettagliCanzone() {
@@ -146,47 +121,33 @@ export default {
           console.log(e);
         });
     },
-    // isLogin() {
-    //   return !!localStorage.getItem("username");
-    // },
     isLogin() {
       this.islog = !!localStorage.getItem("username");
     },
-
-    // setLogin(){
-    //   console.log(this.login);
-    //   localStorage.setItem("username", this.login)
-    // }
-
-    // onChildClick(value){
-    //   this.fromChild = value;
-    //   console.log(this.fromChild);
-    // },
-    // onschiaccio(value){
-    //   this.dialogo = value;
-    //   console.lof(this.dialogo);
-    // }
     aprireDialogo() {
       // return islog= !!localStorage.getItem("username");
       if (this.islog == true) {
         this.preferiti = true;
         this.loggati = false;
-        preferiti();
+        return this.addPreferiti();
       } else {
         this.loggati = true;
         this.preferiti = false;
       }
     },
-    preferiti (){
-      dataService.setPreferiti(this.dettagli.id_track,
-      this.dettagli.id_artist,
-      this.dettagli.id_album)
-      .then(() => {
-        console.log("hai aggiunto ai prefe");
-      })
-      .catch(() =>{
-        console.log("c'è qualcosa che non va");
-      })
+    addPreferiti (){
+      dataService.setPreferiti(
+        this.dettagli.id_track,
+        this.$route.params.id_artist,
+        this.$route.params.id_album)
+      .then(preferiti => {
+          console.log ('successo');
+          console.log(preferiti);
+        })
+        .catch(e => {
+          console.error("Qualcosa è andato storto! ");
+          console.log(e);
+        });
     }
   }
 };

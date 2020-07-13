@@ -49,7 +49,7 @@ import axios from "axios";
 export default {
   data: function() {
     return {
-      artista: null,
+      artista: '',
       spotify: null,
       google: null,
       paese: false,
@@ -58,7 +58,6 @@ export default {
   },
   created() {
     this.infoArtista();
-    this.albumArtista();
   },
   methods: {
     infoArtista() {

@@ -7,19 +7,25 @@
         </md-button>
       </div>
       <div class="md-toolbar-section-end">
-        <md-button class="md-icon-button">
+        <md-button class="md-icon-button" @click="isLogin(), aprireDialogo()">
           <md-icon>favorite</md-icon>
         </md-button>
-      <!-- </div>
-      <div> -->
+        <md-dialog-alert
+          :md-active.sync="loggati"
+          md-title="Azione non permessa"
+          md-content="Per visualizzare i preferiti devi prima essere loggato"
+          md-confirm-text="ok"
+        />
+        <!-- </div>
+        <div>-->
         <span v-if="login">Login: {{login}}</span>
         <md-dialog-prompt
           :md-active.sync="dialogo"
           v-model="login"
-          md-title="What's your name?"
+          md-title="Inserisci il tuo nome"
           md-input-maxlength="30"
-          md-input-placeholder="Type your name..."
-          md-confirm-text="Done"
+          md-input-placeholder="Scrivi il tuo nome..."
+          md-confirm-text="Fatto"
           @md-confirm="setLogin()"
         />
 
@@ -48,7 +54,8 @@ export default {
       dialogo: false,
       login: undefined,
       // username: this.getLogin(),
-      islog: this.isLogin()
+      islog: undefined,
+      loggati: undefined,
     };
   },
   watch: {
@@ -71,13 +78,28 @@ export default {
     //   return localStorage.getItem("username");
     // },
     isLogin() {
-      return !!localStorage.getItem("username");
+      this.islog = !!localStorage.getItem("username");
     },
     logout() {
-    localStorage.removeItem("username");
-    this.islog = false;
-    this.login = undefined;
+      localStorage.removeItem("username");
+      this.islog = false;
+      this.login = undefined;
+      if(this.$route.path === '/preferiti'){
+      this.$router.push({ path: "/home" });
+      }
     },
+    aprireDialogo() {
+    // return islog= !!localStorage.getItem("username");
+    if (this.islog == false) {
+      this.loggati = true;
+    //   return this.addPreferiti();
+    }
+    else {
+      this.$router.push({ path: "/preferiti" });
+    //   this.loggati = true;
+    //   this.preferiti = false;
+    }
+  }
   }
 };
 </script>

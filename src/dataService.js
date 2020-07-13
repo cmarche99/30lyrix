@@ -26,16 +26,14 @@ import "@firebase/firestore";
   var db = firebase.firestore();
 
   export default {
-    setPreferiti(valore, numero, albicocche) {
+    setPreferiti(id_track, id_artist, id_album) {
       return db
         .collection("preferiti")
-        .doc()
-        .collection(localStorage.getItem("username"))
-        .doc()
-        .set({
-          id_track: valore,
-          id_artist: numero,
-          id_album: albicocche
+        .add({
+          id_track: id_track,
+          id_artist: id_artist,
+          id_album: id_album,
+          username: localStorage.getItem("username")
         });
     }
   }
