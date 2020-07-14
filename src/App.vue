@@ -9,6 +9,7 @@
       <div class="md-toolbar-section-end">
         <md-button class="md-icon-button" @click="isLogin(), aprireDialogo()">
           <md-icon>favorite</md-icon>
+          <md-tooltip md-delay="200" md-direction="left">Vedi preferiti</md-tooltip>
         </md-button>
         <md-dialog-alert
           :md-active.sync="loggati"
@@ -72,6 +73,7 @@ export default {
       localStorage.setItem("username", this.login);
       this.islog = true;
       console.log(this.islog);
+      this.$router.go();
       // this.$forceUpdate();
     },
     // getLogin (){
@@ -87,6 +89,7 @@ export default {
       if(this.$route.path === '/preferiti'){
       this.$router.push({ path: "/home" });
       }
+      else{this.$router.go()}
     },
     aprireDialogo() {
     // return islog= !!localStorage.getItem("username");

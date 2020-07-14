@@ -5,24 +5,32 @@
         <md-card-header-text>
           <span class="md-title">{{dettagli.track}}</span>
         </md-card-header-text>
-        <md-card-actions>
-          <md-button class="md-icon-button" @click="isLogin(); aprireDialogo();">
+
+        <md-card-actions v-if="cuorenero == false">
+          <md-button class="md-icon-button" @click="isLogin(); aprireDialogo()">
             <md-icon>favorite_border</md-icon>
           </md-button>
-          <md-snackbar :md-duration="4000" :md-active.sync="preferiti" md-persistent>
-            <span>Aggiunto ai preferiti!</span>
-            <md-button class="md-primary" :to=" '/preferiti/' ">Vedi i preferiti</md-button>
-          </md-snackbar>
-
-          <md-dialog-alert
-            :md-active.sync="loggati"
-            md-title="Azione non permessa"
-            md-content="Per aggiungere una canzone ai preferiti devi prima essere loggato"
-            md-confirm-text="ok"
-          />
-
           <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
         </md-card-actions>
+        <md-card-actions v-if="cuorenero == true">
+          <md-button class="md-icon-button" @click="rimuoviPreferiti()">
+            <md-icon>favorite</md-icon>
+          </md-button>
+        </md-card-actions>
+        <md-snackbar :md-duration="3000" :md-active.sync="preferiti" md-persistent>
+          <span>Aggiunto ai preferiti!</span>
+          <md-button class="md-primary" :to=" '/preferiti/' ">Vedi i preferiti</md-button>
+        </md-snackbar>
+
+        <md-dialog-alert
+          :md-active.sync="loggati"
+          md-title="Azione non permessa"
+          md-content="Per aggiungere una canzone ai preferiti devi prima essere loggato"
+          md-confirm-text="ok"
+        />
+        <md-card-media class="md-medium">
+          <img :src="album.cover" />
+        </md-card-media>
       </md-card-header>
 
       <md-card-content>
@@ -63,15 +71,19 @@ import dataService from "../dataService";
 export default {
   data: function() {
     return {
-      dettagli: '',
+      dettagli: "",
       testo: null,
       islog: undefined,
       preferiti: undefined,
-      loggati: undefined
+      loggati: undefined,
+      cuorenero: false,
+      album: ""
     };
   },
   created() {
     this.dettagliCanzone();
+    this.vediPreferiti();
+    this.albumCanzone();
   },
   methods: {
     dettagliCanzone() {
@@ -121,9 +133,29 @@ export default {
           console.log(e);
         });
     },
+    albumCanzone() {
+      axios
+        .get(
+          "https://api.happi.dev/v1/music/artists/" +
+            this.$route.params.id_artist +
+            "/albums/" +
+            this.$route.params.id_album +
+            "?apikey=945335Zmq8pmd4LEAhl2oM3HYyGxq5cWA0rYkQPdkYe7qo38CukWVmcH"
+        )
+        .then(data => {
+          console.log("abbiamo trovato questo album");
+          console.log(data);
+          this.album = data.data.result;
+        })
+        .catch(e => {
+          console.error("qualcosa è andato storto");
+          console.log(e);
+        });
+    },
     isLogin() {
       this.islog = !!localStorage.getItem("username");
     },
+
     aprireDialogo() {
       // return islog= !!localStorage.getItem("username");
       if (this.islog == true) {
@@ -135,20 +167,73 @@ export default {
         this.preferiti = false;
       }
     },
-    addPreferiti (){
-      dataService.setPreferiti(
-        this.dettagli.id_track,
-        this.$route.params.id_artist,
-        this.$route.params.id_album)
-      .then(preferiti => {
-          console.log ('successo');
+    addPreferiti() {
+      dataService
+        .setPreferiti(
+          this.dettagli.id_track,
+          this.dettagli.track,
+          this.$route.params.id_artist,
+          this.dettagli.artist,
+          this.$route.params.id_album,
+          this.album.cover
+        )
+        .then(preferiti => {
+          console.log("successo");
           console.log(preferiti);
+          this.cuorenero = true;
         })
         .catch(e => {
           console.error("Qualcosa è andato storto! ");
           console.log(e);
         });
+    },
+    vediPreferiti() {
+      dataService.getPreferiti(localStorage.getItem("username")).then(data => {
+        data.forEach(doc => {
+          // console.log(doc.data().id_track);
+          if (doc.data().traccia === this.dettagli.id_track) {
+            return (this.cuorenero = true);
+          }
+        });
+      });
+    },
+    rimuoviPreferiti() {
+      dataService.removePreferiti(this.dettagli.id_track).then(() => {
+        this.cuorenero = false;
+      });
     }
+    //  rimuoviPreferiti() {
+    //     dataService.removePreferiti(localStorage.getItem("username")).then(data => {
+    //       data.forEach(doc => {
+    //         // console.log(doc.data().id_track);
+    //         if (doc.data().traccia === this.dettagli.id_track) {
+    //           return (this.cuorenero = false);
+    //         }
+    //       });
+    //     });
+    //   },
+    // rimuoviPreferiti() {
+    //   dataService.getPreferiti(localStorage.getItem("username"))
+    //   .then(data => {
+    //     data.forEach(doc => {
+    //       console.log(doc.data().id_track);
+    //       if (doc.data().id_track === this.dettagli.id_track) {
+    //         return (
+    //           dataService.removePreferiti(localStorage.getItem("username")),
+    //           (this.cuorenero = false)
+    //         );
+    //       }
+    //     });
+    //   });
+    // }
+    // rimuoviPreferiti() {
+    //   dataService.removePreferiti(this.$route.params.id_track)
+    //   .then((data) => {
+    //     data.forEach((doc) => {
+    //       doc.ref.delete();
+    //     });
+    //   });
+    // }
   }
 };
 </script>

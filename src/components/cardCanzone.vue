@@ -16,7 +16,7 @@
 
       <md-card-actions>
         <md-button
-          :to=" '/canzone/' + canzone.id_artist + '/' + canzone.id_album + '/' + canzone.id_track "
+          :to=" '/canzone/' + canzone.id_artist + '/' + canzone.id_album + '/' + canzone.id_track"
           class="md-raised md-primary"
         >Dettagli canzone</md-button>
       </md-card-actions>
@@ -31,7 +31,7 @@ export default {
     truncate: function(source, value) {
       return source.length > value ? source.slice(0, value - 1) + "…" : source;
     }
-  }
+  } 
 };
 </script>
 

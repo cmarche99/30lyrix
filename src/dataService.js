@@ -26,14 +26,49 @@ import "@firebase/firestore";
   var db = firebase.firestore();
 
   export default {
-    setPreferiti(id_track, id_artist, id_album) {
+    setPreferiti(id_track, track, id_artist, artist, id_album, cover) {
       return db
         .collection("preferiti")
         .add({
           id_track: id_track,
+          track: track,
           id_artist: id_artist,
+          artist: artist,
           id_album: id_album,
+          cover: cover,         
           username: localStorage.getItem("username")
         });
-    }
+    },
+    getPreferiti() {
+      return db
+        .collection("preferiti")
+        .where("username", "==", localStorage.getItem("username"))
+        .get()
+    },
+    removePreferiti(id_track){
+      return db
+      .collection("preferiti")
+      .where("traccia", "==", id_track)
+      .where("username", "==", localStorage.getItem("username"))
+      .get()
+      .then(result =>{
+        result.forEach(doc =>{
+          db.collection("preferiti").doc(doc.id).delete();
+          });
+      });
+    },
+    // removePreferiti() {
+    //   return db
+    //     .collection("preferiti")
+    //     .where("username", "==", localStorage.getItem("username"))
+    //     .where("traccia", "==", id_track)
+    //     .get()
+    // },
+    // getID (id_track){
+    //   db.collection("preferiti")
+    //   .where("username", "==", localStorage.getItem("username"))
+    //   .where("traccia", "==", id_track)
+    //   .id
+    // }
   }
+
