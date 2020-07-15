@@ -59,7 +59,7 @@ export default {
     return {
       prova: "ciao",
       dialogo: false,
-      login: undefined,
+      login: '',
       username: localStorage.getItem("username"),
       islog: undefined,
       loggati: undefined,
@@ -92,7 +92,7 @@ export default {
       localStorage.removeItem("username");
       this.islog = false;
       this.login = undefined;
-      if(this.$route.path === '/preferiti'){
+      if(this.$router.path == '/preferiti'){
       this.$router.push({ path: "/home" });
       }
       else{this.$router.go()}

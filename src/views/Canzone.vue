@@ -16,6 +16,7 @@
           <md-button class="md-icon-button" @click="rimuoviPreferiti()">
             <md-icon>favorite</md-icon>
           </md-button>
+          <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
         </md-card-actions>
         <md-snackbar :md-duration="3000" :md-active.sync="preferiti" md-persistent>
           <span>Aggiunto ai preferiti!</span>

@@ -10,7 +10,7 @@
         </md-card-header-text>
       </md-card-header>
       <md-card-content>
-        <md-list v-for="traccia in playlist" :key="traccia.id_track">
+        <md-list v-for="(traccia, i) in playlist" :key="traccia.id_track">
           <md-list-item>
             <md-avatar class="md-large">
               <img :src="traccia.cover" />
@@ -25,8 +25,8 @@
             </div>
             <md-button
               class="md-icon-button md-list-action"
-              @click="isLogin(); aprireDialogo(traccia)"
-              v-if="cuorenero == false"
+              @click="isLogin(); aprireDialogo(traccia, i)"
+              v-if="traccia.cuorenero == false"
             >
               <md-icon>favorite_border</md-icon>
               <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
@@ -34,11 +34,11 @@
 
             <md-button
               class="md-icon-button md-list-action"
-              @click.stop.prevent="rimuoviPreferiti(traccia)"
-              v-if="cuorenero == true"
+              @click.stop="rimuoviPreferiti(traccia, i)"
+              v-if="traccia.cuorenero == true"
             >
               <md-icon>favorite</md-icon>
-              <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
+              <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
             </md-button>
 
             <md-dialog-alert
@@ -70,12 +70,12 @@ export default {
       islog: undefined,
       preferiti: undefined,
       loggati: undefined,
-      cuorenero: false,
+      //cuorenero: false,
     };
   },
   created() {
     this.playlistArtista();
-    this.vediPreferiti();
+    // this.vediPreferiti();
   },
   methods: {
     playlistArtista() {
@@ -89,28 +89,33 @@ export default {
           console.log("abbiamo trovato questa playlist");
           console.log(data);
           this.playlist = data.data.result;
+
+          this.addCuorenero();
+          this.playlist.forEach((traccia, i) =>{
+            this.vediPreferiti(traccia, i)
+          })
         })
         .catch(e => {
-          console.error("qualcosa è andato storto");
+          console.error("qualcosa è andato storto nel caricare la playlist");
           console.log(e);
         });
     },
     isLogin() {
       this.islog = !!localStorage.getItem("username");
     },
-    aprireDialogo(traccia) {
+    aprireDialogo(traccia, i) {
       // return islog= !!localStorage.getItem("username");
       if (this.islog == true) {
         this.preferiti = true;
         this.loggati = false;
         console.log(this.preferiti);
-        return this.addPreferiti(traccia);
+        this.addPreferiti(traccia);
       } else {
         this.loggati = true;
         this.preferiti = false;
       }
     },
-    addPreferiti(traccia) {
+    addPreferiti(traccia, i) {
       dataService
         .setPreferiti(
           traccia.id_track, 
@@ -122,28 +127,36 @@ export default {
         .then(preferiti => {
           console.log("successo");
           console.log(preferiti);
-          this.cuorenero = true;
+          this.$set(traccia, "cuorenero", true);
         })
         .catch(e => {
-          console.error("Qualcosa è andato storto! ");
+          console.error("Qualcosa è andato storto in addPreferiti! ");
           console.log(e);
         });
     },
-      rimuoviPreferiti(traccia){
+      rimuoviPreferiti(traccia, i){
       dataService.removePreferiti(traccia.id_track)
       .then(() => {
-        this.cuorenero = false;
+        this.$set(this.playlist[i], "cuorenero", false);
       });
     },
-    vediPreferiti(traccia) {
+    vediPreferiti(traccia, i) {
       dataService.getPreferiti(localStorage.getItem("username")).then(data => {
         data.forEach(doc => {
-          // console.log(doc.data().id_track);
-          if (doc.data().id_track == this.traccia.id_track) {
-            this.cuorenero = true;
+          console.log(doc.data());
+          console.log("pappaero non mi stampo")
+          if (doc.data().id_track == traccia.id_track) {
+            this.$set(this.playlist[i], "cuorenero", true);
             console.log("ho fatto il metodo VEDIPREFERITI");
           }
         });
+
+        console.log(this.playlist);
+      });
+    },
+    addCuorenero(){
+        this.playlist.forEach(traccia => {
+        this.$set(traccia, "cuorenero", false);
       });
     },
   }
