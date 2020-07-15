@@ -25,7 +25,7 @@
         <md-dialog-alert
           :md-active.sync="loggati"
           md-title="Azione non permessa"
-          md-content="Per aggiungere una canzone ai preferiti devi prima essere loggato"
+          md-content="Per aggiungere una canzone ai preferiti devi prima effettuare il login."
           md-confirm-text="ok"
         />
         <md-card-media class="md-medium">
@@ -191,8 +191,9 @@ export default {
       dataService.getPreferiti(localStorage.getItem("username")).then(data => {
         data.forEach(doc => {
           // console.log(doc.data().id_track);
-          if (doc.data().traccia === this.dettagli.id_track) {
-            return (this.cuorenero = true);
+          if (doc.data().id_track == this.dettagli.id_track) {
+            this.cuorenero = true;
+            console.log("ho fatto il metodo VEDIPREFERITI");
           }
         });
       });

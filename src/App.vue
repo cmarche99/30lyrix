@@ -7,19 +7,15 @@
         </md-button>
       </div>
       <div class="md-toolbar-section-end">
-        <md-button class="md-icon-button" @click="isLogin(), aprireDialogo()">
-          <md-icon>favorite</md-icon>
-          <md-tooltip md-delay="200" md-direction="left">Vedi preferiti</md-tooltip>
-        </md-button>
         <md-dialog-alert
           :md-active.sync="loggati"
-          md-title="Azione non permessa"
-          md-content="Per visualizzare i preferiti devi prima essere loggato"
+          md-title="Area riservata"
+          md-content="Per visualizzare i preferiti devi prima effettuare il login."
           md-confirm-text="ok"
         />
         <!-- </div>
         <div>-->
-        <span v-if="login">Login: {{login}}</span>
+        <span v-if="islog">Username: <b>{{username}}</b></span>
         <md-dialog-prompt
           :md-active.sync="dialogo"
           v-model="login"
@@ -30,9 +26,19 @@
           @md-confirm="setLogin()"
         />
 
-        <md-button @click="dialogo=true" v-if="islog == false">login</md-button>
+        <md-button @click="dialogo=true" v-if="islog == false" class="md-icon-button">
+          <md-icon>login</md-icon>
+          <md-tooltip md-delay="200" md-direction="bottom">Login</md-tooltip>
+        </md-button>
         <!-- <p>{{islog}}</p> -->
-        <md-button @click="logout()" v-if="islog == true">logout</md-button>
+        <md-button @click="logout()" v-if="islog == true" class="md-icon-button">
+          <md-icon>exit_to_app</md-icon>
+          <md-tooltip md-delay="200" md-direction="bottom">Logout</md-tooltip>
+        </md-button>
+                <md-button class="md-icon-button" @click="isLogin(), aprireDialogo()">
+          <md-icon>favorite</md-icon>
+          <md-tooltip md-delay="200" md-direction="bottom">Preferiti</md-tooltip>
+        </md-button>
         <!-- <div>
         <p v-if="islog">Benvenuto {{username}}</p>
         <p>{{islog}}</p>
@@ -54,16 +60,16 @@ export default {
       prova: "ciao",
       dialogo: false,
       login: undefined,
-      // username: this.getLogin(),
+      username: localStorage.getItem("username"),
       islog: undefined,
       loggati: undefined,
     };
   },
-  watch: {
-    login: function(value) {
-      this.islog == true;
-    }
-  },
+  // watch: {
+  //   login: function(value) {
+  //     this.islog == true;
+  //   }
+  // },
   created() {
     this.isLogin();
   },

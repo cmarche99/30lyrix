@@ -34,7 +34,7 @@
 
             <md-button
               class="md-icon-button md-list-action"
-              @click="rimuoviPreferiti(traccia)"
+              @click.stop.prevent="rimuoviPreferiti(traccia)"
               v-if="cuorenero == true"
             >
               <md-icon>favorite</md-icon>
@@ -75,6 +75,7 @@ export default {
   },
   created() {
     this.playlistArtista();
+    this.vediPreferiti();
   },
   methods: {
     playlistArtista() {
@@ -111,7 +112,13 @@ export default {
     },
     addPreferiti(traccia) {
       dataService
-        .setPreferiti(traccia.id_track, traccia.id_artist, traccia.id_album)
+        .setPreferiti(
+          traccia.id_track, 
+          traccia.track, 
+          traccia.id_artist,
+          traccia.artist,
+          traccia.id_album,
+          traccia.cover)
         .then(preferiti => {
           console.log("successo");
           console.log(preferiti);
@@ -127,7 +134,18 @@ export default {
       .then(() => {
         this.cuorenero = false;
       });
-    }
+    },
+    vediPreferiti(traccia) {
+      dataService.getPreferiti(localStorage.getItem("username")).then(data => {
+        data.forEach(doc => {
+          // console.log(doc.data().id_track);
+          if (doc.data().id_track == this.traccia.id_track) {
+            this.cuorenero = true;
+            console.log("ho fatto il metodo VEDIPREFERITI");
+          }
+        });
+      });
+    },
   }
 };
 </script>

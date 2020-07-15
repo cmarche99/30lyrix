@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <div v-if="cisono == true" class="md-layout md-gutter md-alignment-center">
+  <div class="md-alignment-center">
+    <h1 class="headline">I tuoi preferiti</h1>
+    <div v-if="cisono == true" class="md-layout md-gutter">
       <cardCanzone v-for="preferita in preferite" :key="preferita.id_track" :canzone="preferita"></cardCanzone>
     </div>
     <md-empty-state
@@ -25,7 +26,7 @@ export default {
   },
   data: function() {
     return {
-      cisono: false,
+      cisono: undefined,
       preferite: []
     };
   },
@@ -70,5 +71,8 @@ export default {
 }
 md-card-content {
   padding: 5%;
+}
+h1{
+  font-weight: lighter;
 }
 </style>

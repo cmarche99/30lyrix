@@ -48,7 +48,7 @@ import "@firebase/firestore";
     removePreferiti(id_track){
       return db
       .collection("preferiti")
-      .where("traccia", "==", id_track)
+      .where("id_track", "==", id_track)
       .where("username", "==", localStorage.getItem("username"))
       .get()
       .then(result =>{
