@@ -23,7 +23,7 @@
                 <router-link :to="'/artista/' + traccia.id_artist">{{traccia.artist}}</router-link>
               </span>
             </div>
-            <md-button
+            <md-button 
               class="md-icon-button md-list-action"
               @click="isLogin(); aprireDialogo(traccia, i)"
               v-if="traccia.cuorenero == false"
@@ -40,22 +40,24 @@
               <md-icon>favorite</md-icon>
               <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
             </md-button>
-
-            <md-dialog-alert
-              :md-active.sync="loggati"
-              md-title="Azione non permessa"
-              md-content="Per aggiungere una canzone ai preferiti devi prima essere loggato"
-              md-confirm-text="ok"
-            />
           </md-list-item>
           <md-divider class="md-inset"></md-divider>
         </md-list>
       </md-card-content>
     </md-card>
-    <md-snackbar :md-duration="4000" :md-active.sync="preferiti" md-persistent>
+    <md-snackbar :md-duration="2000" :md-active.sync="preferiti" md-persistent>
       <span>Aggiunto ai preferiti!</span>
       <md-button class="md-primary" :to=" '/preferiti/' ">Vedi i preferiti</md-button>
     </md-snackbar>
+    <md-snackbar :md-duration="2000" :md-active.sync="rimosso" md-persistent>
+      <span>Rimosso dai preferiti</span>
+    </md-snackbar>
+    <md-dialog-alert
+      :md-active.sync="loggati"
+      md-title="Azione non permessa"
+      md-content="Per aggiungere una canzone ai preferiti devi prima essere loggato"
+      md-confirm-text="ok"
+    />
   </div>
 </template>
 
@@ -71,6 +73,7 @@ export default {
       preferiti: undefined,
       loggati: undefined,
       //cuorenero: false,
+      rimosso: undefined
     };
   },
   created() {
@@ -91,9 +94,9 @@ export default {
           this.playlist = data.data.result;
 
           this.addCuorenero();
-          this.playlist.forEach((traccia, i) =>{
-            this.vediPreferiti(traccia, i)
-          })
+          this.playlist.forEach((traccia, i) => {
+            this.vediPreferiti(traccia, i);
+          });
         })
         .catch(e => {
           console.error("qualcosa è andato storto nel caricare la playlist");
@@ -118,12 +121,13 @@ export default {
     addPreferiti(traccia, i) {
       dataService
         .setPreferiti(
-          traccia.id_track, 
-          traccia.track, 
+          traccia.id_track,
+          traccia.track,
           traccia.id_artist,
           traccia.artist,
           traccia.id_album,
-          traccia.cover)
+          traccia.cover
+        )
         .then(preferiti => {
           console.log("successo");
           console.log(preferiti);
@@ -134,17 +138,17 @@ export default {
           console.log(e);
         });
     },
-      rimuoviPreferiti(traccia, i){
-      dataService.removePreferiti(traccia.id_track)
-      .then(() => {
+    rimuoviPreferiti(traccia, i) {
+      dataService.removePreferiti(traccia.id_track).then(() => {
         this.$set(this.playlist[i], "cuorenero", false);
+        this.rimosso = true;
       });
     },
     vediPreferiti(traccia, i) {
       dataService.getPreferiti(localStorage.getItem("username")).then(data => {
         data.forEach(doc => {
           console.log(doc.data());
-          console.log("pappaero non mi stampo")
+          console.log("pappaero non mi stampo");
           if (doc.data().id_track == traccia.id_track) {
             this.$set(this.playlist[i], "cuorenero", true);
             console.log("ho fatto il metodo VEDIPREFERITI");
@@ -154,11 +158,11 @@ export default {
         console.log(this.playlist);
       });
     },
-    addCuorenero(){
-        this.playlist.forEach(traccia => {
+    addCuorenero() {
+      this.playlist.forEach(traccia => {
         this.$set(traccia, "cuorenero", false);
       });
-    },
+    }
   }
 };
 </script>

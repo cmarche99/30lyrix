@@ -15,7 +15,8 @@ import Preferiti from "./views/Preferiti";
 
 Vue.use(VueMaterial);
 Vue.use(VueRouter);
-Vue.use(axios);
+// Vue.use(axios);
+
 
 Vue.config.productionTip = false
 

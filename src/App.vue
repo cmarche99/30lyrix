@@ -1,7 +1,8 @@
 <template>
-  <md-app id="App" md-mode="fixed-last">
-    <md-app-toolbar class="md-primary">
-      <div class="md-toolbar-section start">
+  <md-app id="App" md-mode="fixed">
+    <md-app-toolbar class="md-primary" md-persistent="full">
+      <div class="md-toolbar-row">
+      <div class="md-toolbar-section-start">
         <md-button :to=" '/home/' ">
           <span class="md-title">30lyrix</span>
         </md-button>
@@ -13,8 +14,6 @@
           md-content="Per visualizzare i preferiti devi prima effettuare il login."
           md-confirm-text="ok"
         />
-        <!-- </div>
-        <div>-->
         <span v-if="islog">Username: <b>{{username}}</b></span>
         <md-dialog-prompt
           :md-active.sync="dialogo"
@@ -30,7 +29,6 @@
           <md-icon>login</md-icon>
           <md-tooltip md-delay="200" md-direction="bottom">Login</md-tooltip>
         </md-button>
-        <!-- <p>{{islog}}</p> -->
         <md-button @click="logout()" v-if="islog == true" class="md-icon-button">
           <md-icon>exit_to_app</md-icon>
           <md-tooltip md-delay="200" md-direction="bottom">Logout</md-tooltip>
@@ -39,10 +37,8 @@
           <md-icon>favorite</md-icon>
           <md-tooltip md-delay="200" md-direction="bottom">Preferiti</md-tooltip>
         </md-button>
-        <!-- <div>
-        <p v-if="islog">Benvenuto {{username}}</p>
-        <p>{{islog}}</p>
-        </div>-->
+
+      </div>
       </div>
     </md-app-toolbar>
     <md-app-content>
@@ -92,8 +88,9 @@ export default {
       localStorage.removeItem("username");
       this.islog = false;
       this.login = undefined;
-      if(this.$router.path == '/preferiti'){
+      if(this.$route.path == '/preferiti'){
       this.$router.push({ path: "/home" });
+      console.log("sono in preferiti")
       }
       else{this.$router.go()}
     },

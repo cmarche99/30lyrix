@@ -18,9 +18,14 @@
           </md-button>
           <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
         </md-card-actions>
+        
         <md-snackbar :md-duration="3000" :md-active.sync="preferiti" md-persistent>
           <span>Aggiunto ai preferiti!</span>
           <md-button class="md-primary" :to=" '/preferiti/' ">Vedi i preferiti</md-button>
+        </md-snackbar>
+        <md-snackbar :md-duration="2000" :md-active.sync="rimosso" md-persistent>
+          <span>Rimosso dai preferiti</span>
+          <md-button class="md-primary" @click="addPreferiti()">Annulla</md-button>
         </md-snackbar>
 
         <md-dialog-alert
@@ -78,7 +83,8 @@ export default {
       preferiti: undefined,
       loggati: undefined,
       cuorenero: false,
-      album: ""
+      album: "",
+      rimosso: undefined
     };
   },
   created() {
@@ -202,6 +208,7 @@ export default {
     rimuoviPreferiti() {
       dataService.removePreferiti(this.dettagli.id_track).then(() => {
         this.cuorenero = false;
+        this.rimosso = true;
       });
     }
     //  rimuoviPreferiti() {

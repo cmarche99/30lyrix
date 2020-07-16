@@ -34,31 +34,79 @@ export default {
     this.cisonoPreferiti();
   },
   methods: {
+    // cisonoPreferiti() {
+    //   dataService.getPreferiti(localStorage.getItem("username")).then(data => {
+    //     data.forEach(doc => {
+    //       console.log(doc.data())
+    //       if (!doc) {
+    //         this.cisono = false;
+    //         console.log("non c'è niente")
+    //       } else {
+    //         this.cisono = true;
+    //         this.preferite.push(doc.data());
+    //       }
+    //       // console.log(this.preferite);
+    //     });
+    //   });
+    // }
     cisonoPreferiti() {
-      dataService.getPreferiti(localStorage.getItem("username")).then(data => {
+      dataService.getPreferiti(localStorage.getItem("username"))
+      .then(data => {
+        var contatore = 0;
         data.forEach(doc => {
-          if (doc.data == 0) {
-            this.cisono = false;
-          } else {
-            this.cisono = true;
-            this.preferite.push(doc.data());
-          }
-          console.log(this.preferite);
+          contatore += 1;
+          this.preferite.push(doc.data());
         });
+        if(contatore == 0){
+            this.cisono = false;
+        }else{
+            this.cisono = true;          
+        }
       });
     }
     // cisonoPreferiti() {
     //   dataService.getPreferiti(localStorage.getItem("username")).then(data => {
-    //       if (data == 0) {
+    //     data.forEach(doc => {
+    //       if(data.doc){
+    //       console.log(doc.data());
+    //         this.cisono = true;
+    //         this.preferite.push(doc.data());
+    //       // console.log(this.preferite);
+    //        } else {
+    //         this.cisono = false;
+    //         console.log("non c'è niente")
+    //         }
+    //     });
+    //   });
+    // }
+
+    // cisonoPreferiti() {
+    //   dataService.getPreferiti(localStorage.getItem("username")).then(data => {
+    //       if (!data.doc) {
     //         this.cisono = false;
     //       }
-    //       else (data.forEach (doc => {
-    //         var preferite = '';
-    //         this.preferite.push(doc.data);
+    //       else {
+    //         console.log("SONO ARRIVATO")
+    //         this.cisono = true;
+    //         data.forEach (doc => {
+    //         this.preferite.push(doc.data());
     //         console.log(this.preferite);
-
     //       })
-    //       )
+    //       }
+    //     });
+    // }
+    //     cisonoPreferiti() {
+    //   dataService.getPreferiti(localStorage.getItem("username")).then(data => {
+    //       if (data.doc) {
+    //         this.cisono = true;
+    //         data.forEach (doc => {
+    //         this.preferite.push(doc.data());
+    //         console.log(this.preferite);
+    //       })
+    //       }
+    //       else {
+    //           this.cisono = false;
+    //       }
     //     });
     // }
   }
@@ -72,7 +120,7 @@ export default {
 md-card-content {
   padding: 5%;
 }
-h1{
+h1 {
   font-weight: lighter;
 }
 </style>
