@@ -36,7 +36,7 @@
     </md-card-content>
     <md-card-actions>
       <md-button
-        class="md-raised md-primary"
+        class="md-primary"
         :to=" '/playlist/' + artista.artist + '/' + artista.id_artist"
       >Smart playlist</md-button>
     </md-card-actions>

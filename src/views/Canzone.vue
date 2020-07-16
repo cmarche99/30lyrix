@@ -6,40 +6,49 @@
           <span class="md-title">{{dettagli.track}}</span>
         </md-card-header-text>
 
+        <!-- button che si vede se la canzone non è nei preferiti e permette di aggiungerla -->
         <md-card-actions v-if="cuorenero == false">
-          <md-button class="md-icon-button" @click="isLogin(); aprireDialogo()">
+          <md-button class="md-icon-button" @click="isLogin(); controlloPreferiti()">
             <md-icon>favorite_border</md-icon>
           </md-button>
           <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
         </md-card-actions>
+
+        <!-- button che si vede se la canzone è stata aggiunta ai preferiti e permette di rimuoverla -->
         <md-card-actions v-if="cuorenero == true">
           <md-button class="md-icon-button" @click="rimuoviPreferiti()">
             <md-icon>favorite</md-icon>
           </md-button>
           <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
         </md-card-actions>
-        
+
+        <!-- avviso per l'aggiunta della canzone ai preferiti e collegamento alla pagina Preferiti -->
         <md-snackbar :md-duration="3000" :md-active.sync="preferiti" md-persistent>
           <span>Aggiunto ai preferiti!</span>
           <md-button class="md-primary" :to=" '/preferiti/' ">Vedi i preferiti</md-button>
         </md-snackbar>
-        <md-snackbar :md-duration="2000" :md-active.sync="rimosso" md-persistent>
+
+        <!-- avviso per la rimozione della canzone dai preferiti e possibilità di annullamento dell'azione -->
+        <md-snackbar :md-duration="3000" :md-active.sync="rimosso" md-persistent>
           <span>Rimosso dai preferiti</span>
           <md-button class="md-primary" @click="addPreferiti()">Annulla</md-button>
         </md-snackbar>
 
+        <!-- dialog per invitarti a fare il login prima di aggiungere la canzone ai preferiti -->
         <md-dialog-alert
           :md-active.sync="loggati"
-          md-title="Azione non permessa"
-          md-content="Per aggiungere una canzone ai preferiti devi prima effettuare il login."
+          md-title="Ops, sembra che tu non abbia effettuato l'accesso"
+          md-content="Per aggiungere una canzone ai preferiti devi prima effettuare il login"
           md-confirm-text="ok"
         />
+
         <md-card-media class="md-medium">
           <img :src="album.cover" />
         </md-card-media>
       </md-card-header>
 
       <md-card-content>
+        <!-- tabella con le informazioni della canzone ricavate dalla chiamata API -->
         <md-table>
           <md-table-row>
             <md-table-cell>
@@ -60,6 +69,7 @@
               <b>Testo</b>
             </md-table-cell>
             <md-table-cell>
+              <!-- tag pre per visualizzare il testo formattato con i caratteri speciali -->
               <pre>{{testo}}</pre>
             </md-table-cell>
           </md-table-row>
@@ -71,28 +81,30 @@
 
 <script>
 import axios from "axios";
-import dialogoLogin from "../components/dialogoLogin";
 import dataService from "../dataService";
 
 export default {
   data: function() {
     return {
-      dettagli: "",
-      testo: null,
-      islog: undefined,
-      preferiti: undefined,
-      loggati: undefined,
-      cuorenero: false,
-      album: "",
-      rimosso: undefined
+      dettagli: [], //variabile settata dalla chiamata api per avere info sulla canzone 
+      testo: '', //variabile settata dalla chiamata api per avere il testo
+      album: [], //variabile settata dalla chiamata api per avere la cover
+      islog: false, //è true se c'è il login fatto
+      loggati: false, //se è true apre il dialog che invita a fare il login
+      preferiti: false, //se è true apre la snackbar di conferma aggiunta ai preferiti
+      cuorenero: false, //se è true mostra il cuore pieno
+      rimosso: false //se è true mostra la snackbar di conferma rimozione
     };
   },
+  
   created() {
     this.dettagliCanzone();
     this.vediPreferiti();
     this.albumCanzone();
   },
   methods: {
+    
+    // esegue la chiamata con i parametri della route, scrive i risultati nella var dettagli
     dettagliCanzone() {
       axios
         .get(
@@ -106,9 +118,8 @@ export default {
         )
         .then(data => {
           console.log("abbiamo trovato questo risultato");
-          console.log(data);
           this.dettagli = data.data.result;
-
+          // controlla se la canzone ha il testo, e se è true esegue testoCanzone
           if (this.dettagli.haslyrics == true) {
             this.testoCanzone();
           }
@@ -118,6 +129,8 @@ export default {
           console.log(e);
         });
     },
+
+    // esegue la chiamata con i parametri della route, scrive i lyrics nella var testo
     testoCanzone() {
       axios
         .get(
@@ -131,8 +144,6 @@ export default {
         )
         .then(data => {
           console.log("abbiamo trovato questo testo");
-          console.log(data);
-
           this.testo = data.data.result.lyrics;
         })
         .catch(e => {
@@ -140,6 +151,8 @@ export default {
           console.log(e);
         });
     },
+    
+    // esegue la chiamata con i parametri della route, scrive il nome dell'album nella var album
     albumCanzone() {
       axios
         .get(
@@ -151,7 +164,6 @@ export default {
         )
         .then(data => {
           console.log("abbiamo trovato questo album");
-          console.log(data);
           this.album = data.data.result;
         })
         .catch(e => {
@@ -159,12 +171,14 @@ export default {
           console.log(e);
         });
     },
+
+    // funzione che controlla se lo username è impostato
     isLogin() {
       this.islog = !!localStorage.getItem("username");
     },
 
-    aprireDialogo() {
-      // return islog= !!localStorage.getItem("username");
+    // apre il dialog se non sei loggato, altrimenti richiama il metodo addPreferiti e apre la snackbar tramite this.preferiti = true
+    controlloPreferiti() {
       if (this.islog == true) {
         this.preferiti = true;
         this.loggati = false;
@@ -174,6 +188,8 @@ export default {
         this.preferiti = false;
       }
     },
+
+    // aggiunge la canzone ai preferiti inserendo i parametri richiesti dalla funzione del dataService e setta la var cuorenero true
     addPreferiti() {
       dataService
         .setPreferiti(
@@ -185,8 +201,7 @@ export default {
           this.album.cover
         )
         .then(preferiti => {
-          console.log("successo");
-          console.log(preferiti);
+          console.log("la canzone è stata aggiunta ai preferiti");
           this.cuorenero = true;
         })
         .catch(e => {
@@ -194,60 +209,31 @@ export default {
           console.log(e);
         });
     },
+
+    // guarda se questa canzone è nei preferiti associati all'username e se è così setta cuorenero true  
     vediPreferiti() {
       dataService.getPreferiti(localStorage.getItem("username")).then(data => {
         data.forEach(doc => {
-          // console.log(doc.data().id_track);
           if (doc.data().id_track == this.dettagli.id_track) {
             this.cuorenero = true;
-            console.log("ho fatto il metodo VEDIPREFERITI");
           }
         });
       });
     },
+    
+    // rimuove la canzone dai preferiti, richiamando la funzione removePreferiti dal dataservice e setta cuorenero false
     rimuoviPreferiti() {
       dataService.removePreferiti(this.dettagli.id_track).then(() => {
         this.cuorenero = false;
         this.rimosso = true;
       });
     }
-    //  rimuoviPreferiti() {
-    //     dataService.removePreferiti(localStorage.getItem("username")).then(data => {
-    //       data.forEach(doc => {
-    //         // console.log(doc.data().id_track);
-    //         if (doc.data().traccia === this.dettagli.id_track) {
-    //           return (this.cuorenero = false);
-    //         }
-    //       });
-    //     });
-    //   },
-    // rimuoviPreferiti() {
-    //   dataService.getPreferiti(localStorage.getItem("username"))
-    //   .then(data => {
-    //     data.forEach(doc => {
-    //       console.log(doc.data().id_track);
-    //       if (doc.data().id_track === this.dettagli.id_track) {
-    //         return (
-    //           dataService.removePreferiti(localStorage.getItem("username")),
-    //           (this.cuorenero = false)
-    //         );
-    //       }
-    //     });
-    //   });
-    // }
-    // rimuoviPreferiti() {
-    //   dataService.removePreferiti(this.$route.params.id_track)
-    //   .then((data) => {
-    //     data.forEach((doc) => {
-    //       doc.ref.delete();
-    //     });
-    //   });
-    // }
   }
 };
 </script>
 
 <style>
+
 pre {
   font-family: "Roboto";
   font-weight: 400;
