@@ -30,7 +30,7 @@
 
     <br />
 
-    <!-- ra i srisultatid della cricerca  richiamando il component cardCanzone (solo se ci sono risultati) -->
+    <!-- mostra i risultati della ricerca richiamando il component cardCanzone (solo se ci sono risultati) -->
     <div class="md-layout md-gutter md-alignment-center" v-if="cisonorisultati == true">
       <cardCanzone v-for="traccia in risultati" :key="traccia.id_track" :canzone="traccia"></cardCanzone>
     </div>
@@ -73,7 +73,7 @@ export default {
         )
         .then(data => {
           this.risultati = data.data.result;
-          // setta a true o false la var cisonorisultati
+          // imposta a true o false la var cisonorisultati
           if (this.risultati == 0) {
             this.cisonorisultati = false;
             console.log("non ho trovato risultati di ricerca");
@@ -91,12 +91,6 @@ export default {
 </script>
 
 <style>
-
-/* DA TOGLIERE!!!! */
-/* .md-layout {
-  width: 100%;
-} */
-
 h1,
 h3 {
   font-weight: lighter;
