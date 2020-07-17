@@ -1,9 +1,13 @@
 <template>
   <div class="md-alignment-center">
     <h1 class="headline">I tuoi preferiti</h1>
+
+    <!-- mostra le canzoni aggiunte ai preferiti richiamando il component cardCanzone (solo se sono state già aggiunte) -->
     <div v-if="cisono == true" class="md-layout md-gutter">
       <cardCanzone v-for="preferita in preferite" :key="preferita.id_track" :canzone="preferita"></cardCanzone>
     </div>
+
+    <!-- mostra l'empty state se non ci sono ancora canzoni aggiunte, con button per tornare alla pagina Home -->
     <md-empty-state
       v-if="cisono == false"
       class="md-accent"
@@ -27,7 +31,7 @@ export default {
   data: function() {
     return {
       cisono: false, //variabile boolena: se true vengono mostrati i preferiti, se false viene mostrato l'empty state
-      preferite: []  //variabile passata al componente, settata in base ai risultati della chiamata al db
+      preferite: []  //variabile passata al componente, impostata in base ai risultati della chiamata al db
     };
   },
   created() {
@@ -46,7 +50,7 @@ export default {
           this.preferite.push(doc.data());
         });
 
-        //la var cisono viene settata rispetto al valore numerico che assume la var contatore
+        //la var cisono viene impostata rispetto al valore numerico che assume la var contatore
         if(contatore == 0){
             this.cisono = false;
         }else{

@@ -86,9 +86,9 @@ import dataService from "../dataService";
 export default {
   data: function() {
     return {
-      dettagli: [], //variabile settata dalla chiamata api per avere info sulla canzone 
-      testo: '', //variabile settata dalla chiamata api per avere il testo
-      album: [], //variabile settata dalla chiamata api per avere la cover
+      dettagli: [], //variabile impostata dalla chiamata api per avere info sulla canzone 
+      testo: '', //variabile impostata dalla chiamata api per avere il testo
+      album: [], //variabile impostata dalla chiamata api per avere la cover
       islog: false, //è true se c'è il login fatto
       loggati: false, //se è true apre il dialog che invita a fare il login
       preferiti: false, //se è true apre la snackbar di conferma aggiunta ai preferiti
@@ -189,7 +189,7 @@ export default {
       }
     },
 
-    // aggiunge la canzone ai preferiti inserendo i parametri richiesti dalla funzione del dataService e setta la var cuorenero true
+    // aggiunge la canzone ai preferiti inserendo i parametri richiesti dalla funzione del dataService e imposta la var cuorenero true
     addPreferiti() {
       dataService
         .setPreferiti(
@@ -210,7 +210,7 @@ export default {
         });
     },
 
-    // guarda se questa canzone è nei preferiti associati all'username e se è così setta cuorenero true  
+    // guarda se questa canzone è nei preferiti associati all'username e se è così imposta cuorenero true  
     vediPreferiti() {
       dataService.getPreferiti(localStorage.getItem("username")).then(data => {
         data.forEach(doc => {
@@ -221,7 +221,7 @@ export default {
       });
     },
     
-    // rimuove la canzone dai preferiti, richiamando la funzione removePreferiti dal dataservice e setta cuorenero false
+    // rimuove la canzone dai preferiti, richiamando la funzione removePreferiti dal dataservice e imposta cuorenero false
     rimuoviPreferiti() {
       dataService.removePreferiti(this.dettagli.id_track).then(() => {
         this.cuorenero = false;
