@@ -1,9 +1,13 @@
 <template>
   <div class="md-alignment-center">
     <h1 class="headline">I tuoi preferiti</h1>
+
+    <!-- mostra le canzoni aggiunte ai preferiti richiamando il component cardCanzone (solo se sono state già aggiunte) -->
     <div v-if="cisono == true" class="md-layout md-gutter">
       <cardCanzone v-for="preferita in preferite" :key="preferita.id_track" :canzone="preferita"></cardCanzone>
     </div>
+
+    <!-- mostra l'empty state se non ci sono ancora canzoni aggiunte, con button per tornare alla pagina Home -->
     <md-empty-state
       v-if="cisono == false"
       class="md-accent"

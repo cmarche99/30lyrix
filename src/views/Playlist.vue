@@ -26,7 +26,10 @@
               </span>
             </div>
 
+           <div v-if="islog == true"> 
+
             <!-- button (mostrato se cuorenero è false) per mettere nei preferiti la canzone -->
+
             <md-button
               class="md-icon-button md-list-action"
               @click="isLogin(); controlloPreferiti(traccia, i)"
@@ -38,6 +41,7 @@
 
             <!-- button (mostrato se cuorenero è true) per rimuovere dai preferiti la canzone -->
             <md-button
+
               class="md-icon-button md-list-action"
               @click.stop="rimuoviPreferiti(traccia, i)"
               v-if="traccia.cuorenero == true"
@@ -45,6 +49,7 @@
               <md-icon>favorite</md-icon>
               <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
             </md-button>
+          </div>
 
           </md-list-item>
           <md-divider class="md-inset"></md-divider>
@@ -87,6 +92,8 @@ export default {
   },
   created() {
     this.playlistArtista();
+    this.isLogin();
+
   },
   methods: {
     //chiamata all'api per avere la playlist usando il parametro della route e scrive la risposta nella var playlist
