@@ -26,13 +26,13 @@
               </span>
             </div>
 
+           <!-- button visualizzato solo se si è effettuato il login -->
            <div v-if="islog == true"> 
-
             <!-- button (mostrato se cuorenero è false) per mettere nei preferiti la canzone -->
 
             <md-button
               class="md-icon-button md-list-action"
-              @click="isLogin(); controlloPreferiti(traccia, i)"
+              @click="isLogin(); addPreferiti(traccia, i)"
               v-if="traccia.cuorenero == false"
             >
               <md-icon>favorite_border</md-icon>
@@ -66,13 +66,6 @@
     <md-snackbar :md-duration="2000" :md-active.sync="rimosso" md-persistent>
       <span>Rimosso dai preferiti</span>
     </md-snackbar>
-    <!-- dialog che invita a fare login per mettere la canzone nei preferiti -->
-    <md-dialog-alert
-      :md-active.sync="loggati"
-      md-title="Azione non permessa"
-      md-content="Per aggiungere una canzone ai preferiti devi prima essere loggato"
-      md-confirm-text="ok"
-    />
   </div>
 </template>
 
@@ -83,11 +76,10 @@ import dataService from "../dataService";
 export default {
   data: function() {
     return {
-      playlist: [],
-      islog: false,
-      preferiti: false,
-      loggati: false,
-      rimosso: false
+      playlist: [], //variabile che si imposta con i risultati della chiamata api
+      islog: false, //boolean che diventa true se è stato effettuato l'accesso
+      preferiti: false, //boolean sinconronizzata con lo snackbar di conferma che la canzone è stata aggiunta ai preferiti
+      rimosso: false //boolean sincronizzata con la snackbar che conferma la rimozione della canzone dai preferiti
     };
   },
   created() {
@@ -131,19 +123,7 @@ export default {
       this.islog = !!localStorage.getItem("username");
     },
 
-    // apre il dialog se non sei loggato, altrimenti richiama il metodo addPreferiti e apre la snackbar tramite this.preferiti = true
-    controlloPreferiti(traccia, i) {
-      if (this.islog == true) {
-        this.preferiti = true;
-        this.loggati = false;
-        this.addPreferiti(traccia);
-      } else {
-        this.loggati = true;
-        this.preferiti = false;
-      }
-    },
-
-    // aggiunge la canzone ai preferiti inserendo i parametri richiesti dalla funzione del dataService e setta la var cuorenero true
+    // aggiunge la canzone ai preferiti inserendo i parametri richiesti dalla funzione del dataService e imposta la var cuorenero true
     addPreferiti(traccia, i) {
       dataService
         .setPreferiti(
