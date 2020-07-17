@@ -23,7 +23,8 @@
                 <router-link :to="'/artista/' + traccia.id_artist">{{traccia.artist}}</router-link>
               </span>
             </div>
-            <md-button 
+           <div v-if="islog == true"> 
+            <md-button
               class="md-icon-button md-list-action"
               @click="isLogin(); aprireDialogo(traccia, i)"
               v-if="traccia.cuorenero == false"
@@ -32,7 +33,7 @@
               <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
             </md-button>
 
-            <md-button
+            <md-button 
               class="md-icon-button md-list-action"
               @click.stop="rimuoviPreferiti(traccia, i)"
               v-if="traccia.cuorenero == true"
@@ -40,6 +41,7 @@
               <md-icon>favorite</md-icon>
               <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
             </md-button>
+          </div>
           </md-list-item>
           <md-divider class="md-inset"></md-divider>
         </md-list>
@@ -79,6 +81,7 @@ export default {
   created() {
     this.playlistArtista();
     // this.vediPreferiti();
+    this.isLogin();
   },
   methods: {
     playlistArtista() {
