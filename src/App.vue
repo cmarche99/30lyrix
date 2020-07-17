@@ -74,7 +74,7 @@ export default {
       login: "", // variabile che si setta con l'inserimento del nome nel dialog
       username: localStorage.getItem("username"), // corrisponde all'username che c'è nel localStorage
       islog: undefined, // boolean che è true se è stato fatto un login, altrimenti è false
-      loggati: false  // se è true si apre il dialogo che invita a fare il login
+      loggati: false // se è true si apre il dialogo che invita a fare il login
     };
   },
   created() {
@@ -82,7 +82,6 @@ export default {
     this.isLogin();
   },
   methods: {
-
     // assegna ad username il valore della variabile login, imposta a true la variabile islog, ricarica la pagina
     setLogin() {
       localStorage.setItem("username", this.login);
@@ -94,15 +93,15 @@ export default {
     isLogin() {
       this.islog = !!localStorage.getItem("username");
     },
-    
+
     // rimuove lo username dal localStorage, imposta false il valore di islog e svuota la variabile login
     logout() {
       localStorage.removeItem("username");
       this.islog = false;
-      this.login = '';
-    //se viene effettutato il logout nella pagina preferiti, vieni indirizzato alla Home, altrimenti ricarica la pagina corrente
+      this.login = "";
+      //se viene effettutato il logout nella pagina preferiti, vieni indirizzato alla Home, altrimenti ricarica la pagina corrente
       if (this.$route.path == "/preferiti") {
-        this.$router.push({ path: "/home" });  
+        this.$router.push({ path: "/home" });
       } else {
         this.$router.go();
       }

@@ -30,8 +30,8 @@ export default {
   },
   data: function() {
     return {
-      cisono: undefined, //variabile boolena: se true vengono mostrati i preferiti, se false viene mostrato l'empty state
-      preferite: [] // variabile passata al componente, settata in base ai risultati della chiamata al db
+      cisono: false, //variabile boolena: se true vengono mostrati i preferiti, se false viene mostrato l'empty state
+      preferite: []  //variabile passata al componente, settata in base ai risultati della chiamata al db
     };
   },
   created() {
@@ -41,8 +41,9 @@ export default {
 
     //controllo delle canzoni salvate associate allo username
     cisonoPreferiti() {
-      dataService.getPreferiti(localStorage.getItem("username")).then(data => {
-        //impostata una variabile che aumenta in base al numero di canzoni salvate trovate nel doc, stampandole?? nella var preferite
+      dataService.getPreferiti(localStorage.getItem("username"))
+      .then(data => {
+         //impostata una variabile che aumenta in base al numero di canzoni salvate trovate nel doc, inserendole nella var preferite
         var contatore = 0;
         data.forEach(doc => {
           contatore += 1;
@@ -50,10 +51,10 @@ export default {
         });
 
         //la var cisono viene settata rispetto al valore numerico che assume la var contatore
-        if (contatore == 0) {
-          this.cisono = false;
-        } else {
-          this.cisono = true;
+        if(contatore == 0){
+            this.cisono = false;
+        }else{
+            this.cisono = true;          
         }
       });
     }

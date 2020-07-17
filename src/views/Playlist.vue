@@ -9,7 +9,9 @@
           >Ecco una playlist creata in base allo stile di {{this.$route.params.artist}}!</div>
         </md-card-header-text>
       </md-card-header>
+
       <md-card-content>
+        <!-- ciclo che presenta tutte le tracce nelle righe -->
         <md-list v-for="(traccia, i) in playlist" :key="traccia.id_track">
           <md-list-item>
             <md-avatar class="md-large">
@@ -23,17 +25,23 @@
                 <router-link :to="'/artista/' + traccia.id_artist">{{traccia.artist}}</router-link>
               </span>
             </div>
+
            <div v-if="islog == true"> 
+
+            <!-- button (mostrato se cuorenero è false) per mettere nei preferiti la canzone -->
+
             <md-button
               class="md-icon-button md-list-action"
-              @click="isLogin(); aprireDialogo(traccia, i)"
+              @click="isLogin(); controlloPreferiti(traccia, i)"
               v-if="traccia.cuorenero == false"
             >
               <md-icon>favorite_border</md-icon>
               <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
             </md-button>
 
-            <md-button 
+            <!-- button (mostrato se cuorenero è true) per rimuovere dai preferiti la canzone -->
+            <md-button
+
               class="md-icon-button md-list-action"
               @click.stop="rimuoviPreferiti(traccia, i)"
               v-if="traccia.cuorenero == true"
@@ -42,18 +50,23 @@
               <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
             </md-button>
           </div>
+
           </md-list-item>
           <md-divider class="md-inset"></md-divider>
         </md-list>
       </md-card-content>
     </md-card>
+
+    <!-- avviso per confermare che la canzone è stata inserita nei preferiti quando la var preferiti è true -->
     <md-snackbar :md-duration="2000" :md-active.sync="preferiti" md-persistent>
       <span>Aggiunto ai preferiti!</span>
       <md-button class="md-primary" :to=" '/preferiti/' ">Vedi i preferiti</md-button>
     </md-snackbar>
+    <!-- avviso per confermare che la canzone è stata rimossa dai preferiti quando la var rimosso è true -->
     <md-snackbar :md-duration="2000" :md-active.sync="rimosso" md-persistent>
       <span>Rimosso dai preferiti</span>
     </md-snackbar>
+    <!-- dialog che invita a fare login per mettere la canzone nei preferiti -->
     <md-dialog-alert
       :md-active.sync="loggati"
       md-title="Azione non permessa"
@@ -70,20 +83,20 @@ import dataService from "../dataService";
 export default {
   data: function() {
     return {
-      playlist: null,
-      islog: undefined,
-      preferiti: undefined,
-      loggati: undefined,
-      //cuorenero: false,
-      rimosso: undefined
+      playlist: [],
+      islog: false,
+      preferiti: false,
+      loggati: false,
+      rimosso: false
     };
   },
   created() {
     this.playlistArtista();
-    // this.vediPreferiti();
     this.isLogin();
+
   },
   methods: {
+    //chiamata all'api per avere la playlist usando il parametro della route e scrive la risposta nella var playlist
     playlistArtista() {
       axios
         .get(
@@ -92,10 +105,9 @@ export default {
             "/smart-playlist?apikey=945335Zmq8pmd4LEAhl2oM3HYyGxq5cWA0rYkQPdkYe7qo38CukWVmcH"
         )
         .then(data => {
-          console.log("abbiamo trovato questa playlist");
-          console.log(data);
+          console.log("abbiamo trovato la playlist");
           this.playlist = data.data.result;
-
+          //fa partire il metodo addCuorenero, e il vediPreferiti per ogni traccia
           this.addCuorenero();
           this.playlist.forEach((traccia, i) => {
             this.vediPreferiti(traccia, i);
@@ -106,21 +118,32 @@ export default {
           console.log(e);
         });
     },
+
+    //imposta il parametro cuorenero in ogni traccia come false
+    addCuorenero() {
+      this.playlist.forEach(traccia => {
+        this.$set(traccia, "cuorenero", false);
+      });
+    },
+
+    // funzione che controlla se lo username è impostato
     isLogin() {
       this.islog = !!localStorage.getItem("username");
     },
-    aprireDialogo(traccia, i) {
-      // return islog= !!localStorage.getItem("username");
+
+    // apre il dialog se non sei loggato, altrimenti richiama il metodo addPreferiti e apre la snackbar tramite this.preferiti = true
+    controlloPreferiti(traccia, i) {
       if (this.islog == true) {
         this.preferiti = true;
         this.loggati = false;
-        console.log(this.preferiti);
         this.addPreferiti(traccia);
       } else {
         this.loggati = true;
         this.preferiti = false;
       }
     },
+
+    // aggiunge la canzone ai preferiti inserendo i parametri richiesti dalla funzione del dataService e setta la var cuorenero true
     addPreferiti(traccia, i) {
       dataService
         .setPreferiti(
@@ -132,8 +155,7 @@ export default {
           traccia.cover
         )
         .then(preferiti => {
-          console.log("successo");
-          console.log(preferiti);
+          console.log("la canzone è stata aggiunta ai preferiti");
           this.$set(traccia, "cuorenero", true);
         })
         .catch(e => {
@@ -141,29 +163,24 @@ export default {
           console.log(e);
         });
     },
+
+    // rimuove la canzone dai preferiti, richiamando la funzione removePreferiti dal dataservice e imposta cuorenero false
     rimuoviPreferiti(traccia, i) {
       dataService.removePreferiti(traccia.id_track).then(() => {
         this.$set(this.playlist[i], "cuorenero", false);
         this.rimosso = true;
       });
     },
+
+    // guarda se la traccia è nei preferiti associati all'username e se è così imposta cuorenero = true
     vediPreferiti(traccia, i) {
       dataService.getPreferiti(localStorage.getItem("username")).then(data => {
         data.forEach(doc => {
           console.log(doc.data());
-          console.log("pappaero non mi stampo");
           if (doc.data().id_track == traccia.id_track) {
             this.$set(this.playlist[i], "cuorenero", true);
-            console.log("ho fatto il metodo VEDIPREFERITI");
           }
         });
-
-        console.log(this.playlist);
-      });
-    },
-    addCuorenero() {
-      this.playlist.forEach(traccia => {
-        this.$set(traccia, "cuorenero", false);
       });
     }
   }
