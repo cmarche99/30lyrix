@@ -30,7 +30,7 @@
           <md-table-cell>
             <b>Maggiori informazioni</b>
           </md-table-cell>
-          <!-- mette a disposizione il link per la ricerca di info su google -->
+          <!-- mette a disposizione il link per la ricerca di info su google attraverso il codice univoco mbid -->
           <md-table-cell>
             <a :href="google" target="_blank" rel="noopener noreferrer">{{google}}</a>
           </md-table-cell>
@@ -53,11 +53,10 @@ import axios from "axios";
 export default {
   data: function() {
     return {
-      artista: '',//variabile
-      spotify: null,//variabile settata dalla chiamata api per avere il link alla ricerca di spotify
-      google: null,//variabile settata dalla chiamata api per avere il link alla ricerca di google
-      paese: false,//settata a true solo se il paese esiste nell'api
-      albums: null
+      artista: '',//variabile che contiene le informazioni dell'artista date dalla chiamata
+      spotify: '',//variabile impostata dalla chiamata api per avere il link alla ricerca di spotify
+      google: '',//variabile impostata dalla chiamata api per avere il link alla ricerca di google
+      paese: false,//imposta a true solo se il paese esiste nell'api
     };
   },
   created() {
@@ -85,7 +84,7 @@ export default {
 
           console.log(this.spotify);
 
-          // setta a true var paese quando il campo non è vuoto
+          // imposta a true var paese quando il campo non è vuoto
           if (this.artista.country != "") {
             this.paese = true;
           }
@@ -98,3 +97,7 @@ export default {
   }
 };
 </script>
+
+<style>
+
+</style>

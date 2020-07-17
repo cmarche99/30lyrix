@@ -71,7 +71,7 @@ export default {
   data: function() {
     return {
       dialogo: false, // se è true si apre il dialogo di login
-      login: "", // variabile che si setta con l'inserimento del nome nel dialog
+      login: "", // variabile che viene impostata con l'inserimento del nome nel dialog
       username: localStorage.getItem("username"), // corrisponde all'username che c'è nel localStorage
       islog: undefined, // boolean che è true se è stato fatto un login, altrimenti è false
       loggati: false // se è true si apre il dialogo che invita a fare il login
