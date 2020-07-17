@@ -13,14 +13,12 @@
       <md-card-content>
         <!-- ciclo che presenta tutte le tracce nelle righe -->
         <md-list v-for="(traccia, i) in playlist" :key="traccia.id_track">
-          <md-list-item>
+          <md-list-item :to=" '/canzone/' + traccia.id_artist + '/' + traccia.id_album + '/' + traccia.id_track ">
             <md-avatar class="md-large">
               <img :src="traccia.cover" />
             </md-avatar>
             <div class="md-list-item-text">
-              <router-link
-                :to=" '/canzone/' + traccia.id_artist + '/' + traccia.id_album + '/' + traccia.id_track "
-              >{{traccia.track}}</router-link>
+              <span>{{traccia.track}}</span>
               <span>
                 <router-link :to="'/artista/' + traccia.id_artist">{{traccia.artist}}</router-link>
               </span>
@@ -32,7 +30,7 @@
 
             <md-button
               class="md-icon-button md-list-action"
-              @click="isLogin(); addPreferiti(traccia, i)"
+              @click.stop.prevent="isLogin(); controlloPreferiti(traccia, i)"
               v-if="traccia.cuorenero == false"
             >
               <md-icon>favorite_border</md-icon>
@@ -43,7 +41,7 @@
             <md-button
 
               class="md-icon-button md-list-action"
-              @click.stop="rimuoviPreferiti(traccia, i)"
+              @click.stop.prevent="rimuoviPreferiti(traccia, i)"
               v-if="traccia.cuorenero == true"
             >
               <md-icon>favorite</md-icon>
