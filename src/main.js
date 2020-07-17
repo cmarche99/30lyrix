@@ -8,7 +8,7 @@ import VueMaterial from 'vue-material'
 //import dei fogli di stile di material
 import "vue-material/dist/vue-material.min.css"; 
 import "vue-material/dist/theme/default.css"; 
-// import "./style/tema.scss";
+import "./style/tema.scss";
 
 
 //import delle pagine della nostra applicazione

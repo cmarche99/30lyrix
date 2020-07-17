@@ -77,7 +77,7 @@ export default {
   data: function() {
     return {
       playlist: [], //variabile che si imposta con i risultati della chiamata api
-      islog: false, //boolean che diventa true se è stato effettuato l'accesso
+      islog: undefined, //boolean che diventa true se è stato effettuato l'accesso
       preferiti: false, //boolean sinconronizzata con lo snackbar di conferma che la canzone è stata aggiunta ai preferiti
       rimosso: false //boolean sincronizzata con la snackbar che conferma la rimozione della canzone dai preferiti
     };
@@ -137,6 +137,7 @@ export default {
         .then(preferiti => {
           console.log("la canzone è stata aggiunta ai preferiti");
           this.$set(traccia, "cuorenero", true);
+          this.preferiti = true;
         })
         .catch(e => {
           console.error("Qualcosa è andato storto in addPreferiti! ");
