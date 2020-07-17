@@ -30,7 +30,7 @@ export default {
   },
   data: function() {
     return {
-      cisono: false, //variabile boolena: se true vengono mostrati i preferiti, se false viene mostrato l'empty state
+      cisono: undefined, //variabile boolena: se true vengono mostrati i preferiti, se false viene mostrato l'empty state
       preferite: []  //variabile passata al componente, impostata in base ai risultati della chiamata al db
     };
   },
