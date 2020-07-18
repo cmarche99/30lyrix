@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>Qui puoi trovare molte canzoni e artisti</h1>
-    <h3>Con un po' di fortuna ci saranno anche alcuni testi!</h3>
+    <h1>Cerca la canzone che ti interessa!</h1>
+    <h3>Potrai trovare informazioni sui brani, gli artisti e tanto altro...</h3>
     
     <!-- barra di ricerca per cercare una canzone e button di invio -->
     <div class="md-layout md-gutter">
@@ -13,12 +13,12 @@
             v-model="ricerca"
             name="ricerca"
             id="ricerca"
-            maxlength="800"
+            maxlength="100"
             @keyup.enter="cercaCanzone()"
           ></md-input>
         </md-field>
       </div>
-      <div class="md-layout-item md-size-10">
+      <div class="md-layout-item md-size-10 ">
         <md-button
           class="md-raised md-primary"
           @click="cercaCanzone()"
@@ -31,7 +31,7 @@
     <br />
 
     <!-- mostra i risultati della ricerca richiamando il component cardCanzone (solo se ci sono risultati) -->
-    <div class="md-layout md-gutter md-alignment-center" v-if="cisonorisultati == true">
+    <div class="md-layout md-gutter" v-if="cisonorisultati == true">
       <cardCanzone v-for="traccia in risultati" :key="traccia.id_track" :canzone="traccia"></cardCanzone>
     </div>
     
@@ -57,7 +57,7 @@ export default {
   data: function() {
     return {
       ricerca: '', //variabile che si imposta nell'input di ricerca
-      risultati: [], //il risultato della chiamata che viene passato al componente
+      risultati: [], //il risultato della chiamata api che viene passato al componente
       cisonorisultati: true //boolean che mostra le card se è true o l'empty state se è false
     };
   },
@@ -76,13 +76,14 @@ export default {
           // imposta a true o false la var cisonorisultati
           if (this.risultati == 0) {
             this.cisonorisultati = false;
-            console.log("non ho trovato risultati di ricerca");
+            console.log("Non ho trovato risultati di ricerca");
           } else {
             this.cisonorisultati = true;
+            console.log("Ho trovato risultati di ricerca");
           }
         })
         .catch(e => {
-          console.error("Qualcosa è andato storto nella ricerca!");
+          console.error("Qualcosa è andato storto nella ricerca");
           console.log(e);
         });
     }
@@ -91,6 +92,9 @@ export default {
 </script>
 
 <style>
+.md-layout {
+  width: 100%;
+}
 h1,
 h3 {
   font-weight: lighter;

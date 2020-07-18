@@ -10,7 +10,7 @@
         <md-card-header-text>
           <div class="md-title">
             {{canzone.track | taglioTitolo(20)}}
-            <md-tooltip md-delay="200" md-direction="bottom">{{canzone.track}}</md-tooltip>
+            <md-tooltip md-delay="200" md-direction="bottom">{{canzone.track }}</md-tooltip>
           </div>
           <div class="md-subhead">
             <router-link :to=" '/artista/' + canzone.id_artist">{{canzone.artist}}</router-link>
@@ -19,7 +19,7 @@
       </md-card-header>
 
       <md-card-actions>
-        <!-- button che porta alla pagina di dettaglio della canzone, con i parametri id_artist, id_album e id_track -->
+        <!-- button che porta alla pagina di dettaglio della canzone -->
         <md-button
           :to=" '/canzone/' + canzone.id_artist + '/' + canzone.id_album + '/' + canzone.id_track"
           class="md-primary"

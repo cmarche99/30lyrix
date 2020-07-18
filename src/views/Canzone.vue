@@ -14,7 +14,7 @@
           <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
         </md-card-actions>
 
-        <!-- button che si vede se la canzone è stata aggiunta ai preferiti e permette di rimuoverla -->
+        <!-- button che si vede se la canzone è nei preferiti e permette di rimuoverla -->
         <md-card-actions v-if="cuorenero == true">
           <md-button class="md-icon-button" @click="rimuoviPreferiti()">
             <md-icon>favorite</md-icon>
@@ -86,20 +86,19 @@ import dataService from "../dataService";
 export default {
   data: function() {
     return {
-      dettagli: [], //variabile impostata dalla chiamata api per avere info sulla canzone 
-      testo: '', //variabile impostata dalla chiamata api per avere il testo
-      album: [], //variabile impostata dalla chiamata api per avere la cover
+      dettagli: [], //variabile impostata dalla chiamata api con le info sulla canzone 
+      testo: '', //variabile impostata dalla chiamata api con il testo
+      album: [], //variabile impostata dalla chiamata api per avere info sull'album
       islog: false, //è true se c'è il login fatto
       loggati: false, //se è true apre il dialog che invita a fare il login
       preferiti: false, //se è true apre la snackbar di conferma aggiunta ai preferiti
-      cuorenero: false, //se è true mostra il cuore pieno
+      cuorenero: undefined, //se è true mostra il cuore pieno, altrimenti quello vuoto
       rimosso: false //se è true mostra la snackbar di conferma rimozione
     };
   },
   
   created() {
     this.dettagliCanzone();
-    this.vediPreferiti();
     this.albumCanzone();
   },
   methods: {
@@ -117,20 +116,21 @@ export default {
             "?apikey=945335Zmq8pmd4LEAhl2oM3HYyGxq5cWA0rYkQPdkYe7qo38CukWVmcH"
         )
         .then(data => {
-          console.log("abbiamo trovato questo risultato");
+          console.log("abbiamo trovato questo risultato di dettagli");
           this.dettagli = data.data.result;
-          // controlla se la canzone ha il testo, e se è true esegue testoCanzone
+          this.vediPreferiti();
+          // controlla se la canzone ha il testo, e se è true esegue testoCanzone()
           if (this.dettagli.haslyrics == true) {
             this.testoCanzone();
           }
         })
         .catch(e => {
-          console.error("qualcosa è andato storto");
+          console.error("qualcosa è andato storto nei dettagli");
           console.log(e);
         });
     },
 
-    // esegue la chiamata con i parametri della route, scrive i lyrics nella var testo
+    // esegue la chiamata con i parametri della route, scrive il lyrics nella var testo
     testoCanzone() {
       axios
         .get(
@@ -147,12 +147,12 @@ export default {
           this.testo = data.data.result.lyrics;
         })
         .catch(e => {
-          console.error("qualcosa è andato storto canzone");
+          console.error("qualcosa è andato storto nel testo");
           console.log(e);
         });
     },
     
-    // esegue la chiamata con i parametri della route, scrive il nome dell'album nella var album
+    // esegue la chiamata con i parametri della route, scrive le info sull'album nella var album
     albumCanzone() {
       axios
         .get(
@@ -167,7 +167,7 @@ export default {
           this.album = data.data.result;
         })
         .catch(e => {
-          console.error("qualcosa è andato storto");
+          console.error("qualcosa è andato storto nell'album");
           console.log(e);
         });
     },
@@ -189,8 +189,9 @@ export default {
       }
     },
 
-    // aggiunge la canzone ai preferiti inserendo i parametri richiesti dalla funzione del dataService e imposta la var cuorenero true
+    // aggiunge la canzone ai preferiti inserendo i parametri richiesti dalla funzione del dataService e imposta la var cuorenero = true
     addPreferiti() {
+      this.cuorenero = true;
       dataService
         .setPreferiti(
           this.dettagli.id_track,
@@ -202,10 +203,9 @@ export default {
         )
         .then(preferiti => {
           console.log("la canzone è stata aggiunta ai preferiti");
-          this.cuorenero = true;
         })
         .catch(e => {
-          console.error("Qualcosa è andato storto! ");
+          console.error("Qualcosa è andato storto nell'aggiungere la canzone ai preferiti");
           console.log(e);
         });
     },
@@ -233,7 +233,6 @@ export default {
 </script>
 
 <style>
-
 pre {
   font-family: "Roboto";
   font-weight: 400;
