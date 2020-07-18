@@ -1,6 +1,6 @@
 <template>
-  <div class="md-alignment-center">
-    <h1 class="headline">I tuoi preferiti</h1>
+  <div>
+    <h1>I tuoi preferiti</h1>
 
     <!-- mostra le canzoni aggiunte ai preferiti richiamando il component cardCanzone (solo se sono state già aggiunte) -->
     <div v-if="cisono == true" class="md-layout md-gutter">
@@ -13,7 +13,7 @@
       class="md-accent"
       md-icon="error_outline"
       md-label="Nessun preferito da mostrare"
-      md-description="Per aggiungere i prefertiti seleziona una canzione"
+      md-description="Per aggiungere i prefertiti seleziona una canzone"
     >
       <md-button class="md-primary md-raised" :to=" '/home'">Cerca una canzone</md-button>
     </md-empty-state>
@@ -45,13 +45,12 @@ export default {
     cisonoPreferiti() {
       dataService.getPreferiti(localStorage.getItem("username"))
       .then(data => {
-         //impostata una variabile che aumenta in base al numero di canzoni salvate trovate nel doc, inserendole nella var preferite
+         //imposta una variabile che aumenta in base al numero di canzoni salvate trovate nel doc, inserendole nella var preferite
         var contatore = 0;
         data.forEach(doc => {
           contatore += 1;
           this.preferite.push(doc.data());
         });
-
         //la var cisono viene impostata rispetto al valore numerico che assume la var contatore
         if(contatore == 0){
             this.cisono = false;
@@ -74,12 +73,6 @@ export default {
 </script>
 
 <style>
-.md-layout {
-  width: 100%;
-}
-md-card-content {
-  padding: 5%;
-}
 h1 {
   font-weight: lighter;
 }

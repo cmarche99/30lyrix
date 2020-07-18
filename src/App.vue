@@ -7,18 +7,18 @@
           <div class="md-toolbar-section-start">
             <!-- button a sinistra che riporta alla home da qualsiasi pagina -->
             <md-button :to=" '/home/' ">
-              <span class="md-title">30lyrix</span>
+              <span class="md-title">30LYRIX</span>
             </md-button>
           </div>
 
           <div class="md-toolbar-section-end">
-            <!-- stampa il nome con cui si è loggati, solo se si è loggati -->
+            <!-- stampa l'username, solo se si è già fatto l'accesso -->
             <span v-if="islog">
               Username:
               <b>{{username}}</b>
             </span>
 
-            <!-- button per fare login e logout che si mostrano in base alla variabile boleana islog -->
+            <!-- button per fare login e logout che si mostrano in base alla variabile booleana islog -->
             <md-button @click="dialogo=true" v-if="islog == false" class="md-icon-button">
               <md-icon>login</md-icon>
               <md-tooltip md-delay="200" md-direction="bottom">Login</md-tooltip>
@@ -39,7 +39,7 @@
               @md-confirm="setLogin()"
             />
 
-            <!-- button per accedere alla pagina preferiti, attraverso i metodi isLogin e aprirePreferiti (controllando se si è loggati) -->
+            <!-- button per accedere alla pagina preferiti, attraverso i metodi isLogin e aprirePreferiti (controllando se si è effettuato il login) -->
             <md-button class="md-icon-button" @click="isLogin(), aprirePreferiti()">
               <md-icon>favorite</md-icon>
               <md-tooltip md-delay="200" md-direction="bottom">Preferiti</md-tooltip>
@@ -78,11 +78,10 @@ export default {
     };
   },
   created() {
-    // questa funzione viene eseguita ogni volta che viene caricata la pagina, per controllare il login
     this.isLogin();
   },
   methods: {
-    // assegna ad username il valore della variabile login, imposta a true la variabile islog, ricarica la pagina
+    // dopo aver fatto il login si ricarica la pagina, si assegna ad username il valore della variabile login, imposta a true la variabile islog
     setLogin() {
       this.$router.go();
       localStorage.setItem("username", this.login);
@@ -94,7 +93,7 @@ export default {
       this.islog = !!localStorage.getItem("username");
     },
 
-    // rimuove lo username dal localStorage, imposta false il valore di islog e svuota la variabile login
+    // rimuove l' username dal localStorage, imposta false il valore di islog e svuota la variabile login
     logout() {
       //se viene effettutato il logout nella pagina preferiti, vieni indirizzato alla Home, altrimenti ricarica la pagina corrente
       if (this.$route.path == "/preferiti") {

@@ -4,16 +4,16 @@
       <md-card-header>
         <md-card-header-text>
           <div class="md-title">Smart playlist</div>
-          <div
-            class="md-subhead"
-          >Ecco una playlist creata in base allo stile di {{this.$route.params.artist}}!</div>
+          <div class="md-subhead">Ecco una playlist creata in base allo stile di {{this.$route.params.artist}}!</div>
         </md-card-header-text>
       </md-card-header>
 
       <md-card-content>
         <!-- ciclo che presenta tutte le tracce nelle righe -->
         <md-list v-for="(traccia, i) in playlist" :key="traccia.id_track">
-          <md-list-item :to=" '/canzone/' + traccia.id_artist + '/' + traccia.id_album + '/' + traccia.id_track ">
+          <md-list-item
+            :to=" '/canzone/' + traccia.id_artist + '/' + traccia.id_album + '/' + traccia.id_track "
+          >
             <md-avatar class="md-large">
               <img :src="traccia.cover" />
             </md-avatar>
@@ -24,30 +24,29 @@
               </span>
             </div>
 
-           <!-- button visualizzato solo se si è effettuato il login -->
-           <div v-if="islog == true"> 
-            <!-- button (mostrato se cuorenero è false) per mettere nei preferiti la canzone -->
+            <!-- buttons per azioni di preferiti visualizzati solo se si è effettuato il login -->
+            <div v-if="islog == true">
 
-            <md-button
-              class="md-icon-button md-list-action"
-              @click.stop.prevent="isLogin(); addPreferiti(traccia, i)"
-              v-if="traccia.cuorenero == false"
-            >
-              <md-icon>favorite_border</md-icon>
-              <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
-            </md-button>
+              <!-- button (mostrato se cuorenero è false) per mettere nei preferiti la canzone -->
+              <md-button
+                class="md-icon-button md-list-action"
+                @click.stop.prevent="isLogin(); addPreferiti(traccia, i)"
+                v-if="traccia.cuorenero == false"
+              >
+                <md-icon>favorite_border</md-icon>
+                <md-tooltip md-delay="200" md-direction="left">Aggiungi ai preferiti</md-tooltip>
+              </md-button>
 
-            <!-- button (mostrato se cuorenero è true) per rimuovere dai preferiti la canzone -->
-            <md-button
-              class="md-icon-button md-list-action"
-              @click.stop.prevent="rimuoviPreferiti(traccia, i)"
-              v-if="traccia.cuorenero == true"
-            >
-              <md-icon>favorite</md-icon>
-              <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
-            </md-button>
-          </div>
-
+              <!-- button (mostrato se cuorenero è true) per rimuovere dai preferiti la canzone -->
+              <md-button
+                class="md-icon-button md-list-action"
+                @click.stop.prevent="rimuoviPreferiti(traccia, i)"
+                v-if="traccia.cuorenero == true"
+              >
+                <md-icon>favorite</md-icon>
+                <md-tooltip md-delay="200" md-direction="left">Rimuovi dai preferiti</md-tooltip>
+              </md-button>
+            </div>
           </md-list-item>
           <md-divider class="md-inset"></md-divider>
         </md-list>
@@ -82,7 +81,6 @@ export default {
   created() {
     this.playlistArtista();
     this.isLogin();
-
   },
   methods: {
     //chiamata all'api per avere la playlist usando il parametro della route e scrive la risposta nella var playlist
@@ -99,7 +97,7 @@ export default {
           //fa partire il metodo addCuorenero, e il vediPreferiti per ogni traccia
           this.addCuorenero();
           this.playlist.forEach((traccia, i) => {
-            this.vediPreferiti(traccia, i);
+           this.vediPreferiti(traccia, i);
           });
         })
         .catch(e => {
@@ -114,6 +112,18 @@ export default {
         this.$set(traccia, "cuorenero", false);
       });
     },
+        
+    // guarda se la traccia è nei preferiti associati all'username e se è così imposta cuorenero = true
+    vediPreferiti(traccia, i) {
+      dataService.getPreferiti(localStorage.getItem("username")).then(data => {
+        data.forEach(doc => {
+          console.log(doc.data());
+          if (doc.data().id_track == traccia.id_track) {
+            this.$set(this.playlist[i], "cuorenero", true);
+          }
+        });
+      });
+    },
 
     // funzione che controlla se lo username è impostato
     isLogin() {
@@ -122,6 +132,7 @@ export default {
 
     // aggiunge la canzone ai preferiti inserendo i parametri richiesti dalla funzione del dataService e imposta la var cuorenero true
     addPreferiti(traccia, i) {
+      this.$set(traccia, "cuorenero", true);
       dataService
         .setPreferiti(
           traccia.id_track,
@@ -133,7 +144,6 @@ export default {
         )
         .then(preferiti => {
           console.log("la canzone è stata aggiunta ai preferiti");
-          this.$set(traccia, "cuorenero", true);
           this.preferiti = true;
         })
         .catch(e => {
@@ -148,26 +158,7 @@ export default {
         this.$set(this.playlist[i], "cuorenero", false);
         this.rimosso = true;
       });
-    },
-
-    // guarda se la traccia è nei preferiti associati all'username e se è così imposta cuorenero = true
-    vediPreferiti(traccia, i) {
-      dataService.getPreferiti(localStorage.getItem("username")).then(data => {
-        data.forEach(doc => {
-          console.log(doc.data());
-          if (doc.data().id_track == traccia.id_track) {
-            this.$set(this.playlist[i], "cuorenero", true);
-          }
-        });
-      });
     }
   }
 };
 </script>
-
-<style>
-img {
-  height: 50px;
-  width: 50 px;
-}
-</style>
