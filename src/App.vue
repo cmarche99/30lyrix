@@ -84,9 +84,9 @@ export default {
   methods: {
     // assegna ad username il valore della variabile login, imposta a true la variabile islog, ricarica la pagina
     setLogin() {
+      this.$router.go();
       localStorage.setItem("username", this.login);
       this.islog = true;
-      this.$router.go();
     },
 
     // funzione che controlla se lo username è impostato
@@ -96,15 +96,15 @@ export default {
 
     // rimuove lo username dal localStorage, imposta false il valore di islog e svuota la variabile login
     logout() {
-      localStorage.removeItem("username");
-      this.islog = false;
-      this.login = "";
       //se viene effettutato il logout nella pagina preferiti, vieni indirizzato alla Home, altrimenti ricarica la pagina corrente
       if (this.$route.path == "/preferiti") {
         this.$router.push({ path: "/home" });
       } else {
         this.$router.go();
       }
+      localStorage.removeItem("username");
+      this.islog = false;
+      this.login = "";
     },
 
     // se non sei loggato apre il dialog per invitarti a farlo, altrimenti indirizza alla pagina preferiti

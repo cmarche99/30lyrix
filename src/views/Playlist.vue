@@ -30,7 +30,7 @@
 
             <md-button
               class="md-icon-button md-list-action"
-              @click.stop.prevent="isLogin(); controlloPreferiti(traccia, i)"
+              @click.stop.prevent="isLogin(); addPreferiti(traccia, i)"
               v-if="traccia.cuorenero == false"
             >
               <md-icon>favorite_border</md-icon>
@@ -39,7 +39,6 @@
 
             <!-- button (mostrato se cuorenero è true) per rimuovere dai preferiti la canzone -->
             <md-button
-
               class="md-icon-button md-list-action"
               @click.stop.prevent="rimuoviPreferiti(traccia, i)"
               v-if="traccia.cuorenero == true"
