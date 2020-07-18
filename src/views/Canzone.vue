@@ -92,7 +92,7 @@ export default {
       islog: false, //è true se c'è il login fatto
       loggati: false, //se è true apre il dialog che invita a fare il login
       preferiti: false, //se è true apre la snackbar di conferma aggiunta ai preferiti
-      cuorenero: false, //se è true mostra il cuore pieno, altrimenti quello vuoto
+      cuorenero: undefined, //se è true mostra il cuore pieno, altrimenti quello vuoto
       rimosso: false //se è true mostra la snackbar di conferma rimozione
     };
   },
